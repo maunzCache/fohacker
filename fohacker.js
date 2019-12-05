@@ -87,7 +87,7 @@ var currentPasswords = [];
       var addExp = Math.round((words + 1) * gameData.difficulty * 0.35);
       gameData.experience += addExp;
       $('.info .input').before('<span class="info">EXP +' + addExp + '</span><br>');
-      gameData.levelUp();
+      game.levelUp();
     },
     "getDifficulty": function() {
       if(gameData.difficulty >= 4 && gameData.difficulty <= 5) {
@@ -282,7 +282,7 @@ var currentPasswords = [];
       }
     },
     "createMarkup": function() {
-
+      
     },
     "addHtml": function() {
       // Todo: Use markup array
@@ -294,10 +294,30 @@ var currentPasswords = [];
         } else {
           selector = '.terminal .right.code';
         }
+		
+		// Todo: Finds passwords in a single row
+		var lineValue = terminalData.code[i];
+		currentPasswords.forEach(function (value, key, array){
+		  var tempNewLineValue = lineValue.replace(value, '<span class="word" data-word="' + value + '">' + value + '</span>');
+		  lineValue = tempNewLineValue;
+		});
         
         $(selector).append('<span id="span' + i + '"></span><br>');
-        $('#span' + i).text(terminalData.code[i]);
+        $('#span' + i).html(lineValue);
       }
+    },
+	"addScript": function() {
+      // Todo: Simulate typing the hovered word
+      $('.code .word').on('mouseover', function(event) {
+		  var passwordHovered = event.target.textContent;
+		  console.log("Hovering: " + passwordHovered);
+		  $('.info .input').attr('data-content', passwordHovered);
+	  });
+	  $('.code .word').on('mouseout', function(event) {
+		console.log("End hover");
+		$('.info .input').attr('data-content', '');
+	  });
+	  // Todo: Merge code from createTerminal()
     },
     "createTerminal": function() {
       game.clearOld();
@@ -316,6 +336,8 @@ var currentPasswords = [];
       game.createMarkup();
       console.log("--- Add html ---");
       game.addHtml();// Create HTML
+	  console.log("--- Add events and listeners ---");
+      game.addScript();
       
       if(perks[0]["level"] >= 2) {
         $('.code .word').each(function() {
@@ -368,8 +390,8 @@ var currentPasswords = [];
       $('.code .word').on('click', function(event) {
         /*var hashedPassword = sjcl.hash.sha256.hash($(this).text());
         if(gameData.password.join('') == hashedPassword.join('')) {*/
-        
-        var selectedPassword = $(this).data("word");
+	
+        var selectedPassword = event.target.textContent;
         
         var position = $.inArray(selectedPassword, currentPasswords);
         if(~position) {
@@ -403,11 +425,7 @@ var currentPasswords = [];
 
         game.updateUI();
       });
-      
-      $('.code span').hover(function() {
-        $('.info .input').attr('data-content', $(this).data("word"));
-      },function() {
-      });
+
       // Break special
       $('.linebreak').hover(function() {
         var dataWord = $(this).data("word");
