@@ -1,0 +1,202 @@
+@charset "UTF-8";
+
+body {
+  background-color: #0B1907;
+  color: #82FA58;
+  font-family: fixedsys, consolas, monospace;
+  font-size: 17px;
+  text-align: center;
+}
+
+a {
+  color: #82FA58;
+  text-decoration: undeline;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+}
+
+/* Infobar */
+.exp,
+.health {
+  border: 2px solid #82FA58;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  height: 15px;
+  width: 100px;
+}
+
+.expbar,
+.healthbar {
+  background-color: #82FA58;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  height: 15px;
+  width: 0;
+}
+
+.infobar {
+  border: 2px solid #82FA58;
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.attempt {
+  background-color: #82FA58;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.attempt:last-child {
+  margin-right: 0;
+}
+
+/* Terminal */
+.terminal {
+  border: 5px solid #464646;
+  border-radius: 5px;
+  display: inline-block;
+  float: left;
+  margin: 0 auto;
+  padding: 15px;
+  text-align: left;
+}
+
+.column {
+  float: left;
+  margin-right: 30px;
+}
+
+.column:last-child {
+  margin-right: 0;
+}
+
+.code ul {
+  display: inline;
+  list-style: outside none none;
+  margin: 0;
+  padding: 0;
+}
+
+.code ul li {
+  display: inline;
+}
+
+.code .dud:hover {
+  background-color: #82FA58;
+  color: #0B1907;
+}
+
+.code .word:hover {
+  background-color: #82FA58;
+  color: #0B1907;
+}
+
+.code .highlight {
+  background-color: #82FA58;
+  color: #0B1907;
+}
+
+.linenumber span:hover {
+  background-color: #82FA58;
+  color: #0B1907;
+}
+
+.info .input::before {
+  background-color: #0B1907;
+  color: #82FA58;
+  content: '>'attr(data-content);
+}
+
+.info .try::before,
+.info .likeness::before,
+.info .text::before {
+  content: '>';
+}
+
+.input {
+  background-color: #82FA58;
+}
+
+/* Tabmenu */
+.tabmenu {
+  display: inline-block;
+  float: left;
+  margin-left: 20px;
+  text-align: left;
+}
+
+.tabmenu > div {
+  border: 2px solid #82FA58;
+  padding: 5px;
+}
+
+.tabmenu a {
+  display: inline-block;
+  padding: 5px;
+  text-decoration: none;
+}
+
+.tabmenu a:hover{
+  background-color: #82FA58;
+  color: #0B1907;
+}
+
+.tabmenu a.active {
+  border: 2px solid #82FA58;
+  border-bottom: 0 none;
+}
+
+.tabmenu .tabs {
+  margin: 0;
+  padding: 0;
+}
+
+.tabmenu  .tabs li {
+  display: inline;
+  list-style: outside none none;
+}
+
+/* Perkbar */
+.perklist {
+  border: 2px solid #82FA58;
+  display: inline-block;
+  margin-top: 20px;
+  padding: 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.perkdiv {
+  padding: 5px;
+  vertical-align: top;
+  word-wrap: break-word;
+  width: 31%;
+}
+
+.perkdiv:hover {
+  background-color: #82FA58;
+  color: #0B1907;
+  padding: 5px;
+  vertical-align: top;
+  word-wrap: break-word;
+  width: 31%;
+}
+
+/* Mixed */
+.infobar > div,
+.perklist > div {
+  display: inline-block;
+  margin: 0 auto;
+}
