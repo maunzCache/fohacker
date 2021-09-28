@@ -10,14 +10,16 @@
  *   - Fill dictionary
  * - Release game and write about it on reddit
  * - Limit info output to 16 lines
+ * - Replace var with let where possible
 */
 
+"use strict"
 var currentPasswords = [];
 (function ($) {
   var dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
   var startDuds = "<([{";
   var endDuds = ">)]}";
-  
+
   var gameData = {
     "password": "",
     "passwordsOnScreen": 14,
@@ -30,7 +32,7 @@ var currentPasswords = [];
     "caps": 0,
     "health": 100,
     "maxhealth": 100,
-    "initialValues": function() {
+    "initialValues": function () {
       gameData.passwordsOnScreen = 14;
       gameData.attempts = 4;
       gameData.difficulty = 4;// word length
@@ -44,18 +46,18 @@ var currentPasswords = [];
       gameData.maxhealth = 100;
     }
   };
-  
+
   // Todo: Possibility to have different or bigger terminals in the future
   var terminalData = {
     "rows": 16,
     "columns": 2,// Number of "pages"
     "dataPerColumn": 12,// Characters per column
-    "maxCharacters": function() {
+    "maxCharacters": function () {
       return terminalData.dataPerColumn * terminalData.rows * terminalData.columns;
     },
-    "codeString": function() {
+    "codeString": function () {
       var returnString = "";
-      for(var i = 0; terminalData.code.length > i; i++) {
+      for (var i = 0; terminalData.code.length > i; i++) {
         returnString += terminalData.code[i];
       }
       return returnString;
@@ -63,18 +65,18 @@ var currentPasswords = [];
     "code": [],
     "markup": []
   };
-  
+
   var game = {
     "version": "0.1 (alpha)",
-    "nextLevelExp": function() {
-      return Math.round(Math.exp((gameData.level + 1)*0.45) + Math.exp(gameData.level*0.45)*6);
+    "nextLevelExp": function () {
+      return Math.round(Math.exp((gameData.level + 1) * 0.45) + Math.exp(gameData.level * 0.45) * 6);
     },
-    "levelUp": function() {
+    "levelUp": function () {
       var nextExp = game.nextLevelExp();
-      
-      while(gameData.experience > game.nextLevelExp()) {
-        var possibleOverhead = game.nextLevelExp()-gameData.experience;
-        if(possibleOverhead <= 0) {
+
+      while (gameData.experience > game.nextLevelExp()) {
+        var possibleOverhead = game.nextLevelExp() - gameData.experience;
+        if (possibleOverhead <= 0) {
           gameData.level++;
           gameData.skillpoints++;
           $('.info .input').before('<span class="info">Level Up</span><br>');
@@ -83,51 +85,51 @@ var currentPasswords = [];
         }
       }
     },
-    "addExperience": function(words) {
+    "addExperience": function (words) {
       var addExp = Math.round((words + 1) * gameData.difficulty * 0.35);
       gameData.experience += addExp;
       $('.info .input').before('<span class="info">EXP +' + addExp + '</span><br>');
       game.levelUp();
     },
-    "getDifficulty": function() {
-      if(gameData.difficulty >= 4 && gameData.difficulty <= 5) {
+    "getDifficulty": function () {
+      if (gameData.difficulty >= 4 && gameData.difficulty <= 5) {
         return "Easy";
-      } else if(gameData.difficulty >= 6 && gameData.difficulty <= 8) {
+      } else if (gameData.difficulty >= 6 && gameData.difficulty <= 8) {
         return "Advanced";
-      } else if(gameData.difficulty >= 9 && gameData.difficulty <= 10) {
+      } else if (gameData.difficulty >= 9 && gameData.difficulty <= 10) {
         return "Expert";
-      } else if(gameData.difficulty >= 11 && gameData.difficulty <= 12) {
+      } else if (gameData.difficulty >= 11 && gameData.difficulty <= 12) {
         return "Master";
       }
     },
-    "updateUI": function() {
+    "updateUI": function () {
       $('.infobar .difficulty').text(game.getDifficulty());
       $('.infobar .level').text(gameData.level);
-      $('.expbar').css('width', gameData.experience/(game.nextLevelExp()/100));
-      
-      if(perks[0]["level"] > 0) {
+      $('.expbar').css('width', gameData.experience / (game.nextLevelExp() / 100));
+
+      if (perks[0]["level"] > 0) {
         $('.password').text('(Password=' + gameData.password + ')');
       }
-      
+
       $('#attempts .attempt').detach();
-      for(var i = 0; gameData.attempts > i; i++) {
+      for (var i = 0; gameData.attempts > i; i++) {
         $('#attempts').append('<span class="attempt">&nbsp;&nbsp;</span>');
       }
-      
+
       $('.perklist').empty();
       $('.perklist').append('Skillpoints: <div class="skillpoints">' + gameData.skillpoints + '</div><br>');
-      $.each(perks, function(key, perk) {
-        if(perk.meetRequirements()) {
+      $.each(perks, function (key, perk) {
+        if (perk.meetRequirements()) {
           var classes = ['perkdiv'];
-          if(perk.level > 0) {
+          if (perk.level > 0) {
             classes.push('active');
           }
-          
+
           var description = perk.description[perk.level];
-          if(description === undefined) {
+          if (description === undefined) {
             description = "Maxed out."
           }
-          
+
           $('.perklist').append('<div class="' + classes.join(' ') + '" data-id="' + key + '">'
             + '<b>' + perk.title + '</b> (' + perk.level + '/' + perk.maxlevel + ')<br>'
             + '<span>' + description + '</span>'
@@ -135,10 +137,10 @@ var currentPasswords = [];
         }
       });
       $('.perklist').append();
-      $('.perkdiv').on('click', function() {
-        if(gameData.skillpoints > 0) {
+      $('.perkdiv').on('click', function () {
+        if (gameData.skillpoints > 0) {
           var perkid = $(this).data("id");
-          if((perks[perkid].level + 1) <= perks[perkid].maxlevel) {
+          if ((perks[perkid].level + 1) <= perks[perkid].maxlevel) {
             perks[perkid].level++;
             gameData.skillpoints--;
             game.updateUI();
@@ -146,7 +148,7 @@ var currentPasswords = [];
         }
       });
     },
-    "clearOld": function() {
+    "clearOld": function () {
       $('.terminal .linenumber').empty();
       $('.terminal .code').empty();
       gameData.attempts = 4;
@@ -154,21 +156,21 @@ var currentPasswords = [];
       $('.info').empty();
       $('.info').append('<span class="input">&nbsp</span>');
     },
-    "createPointers": function() {
+    "createPointers": function () {
       var lineNumber = Math.random().toString(16).slice(2, 6);
-      
-      $('.terminal .linenumber').each(function(key, value) {
-        for(var i = 0; i < terminalData.rows; i++) {
+
+      $('.terminal .linenumber').each(function (key, value) {
+        for (var i = 0; i < terminalData.rows; i++) {
           lineNumber = (parseInt(lineNumber, terminalData.rows) + (i * 12)).toString(16).toUpperCase();// Todo allow overflow!
-          
-          if(lineNumber.length > 4) {
+
+          if (lineNumber.length > 4) {
             lineNumber = lineNumber.slice(1, 5);
           }
-          while(lineNumber.length < 4) {
+          while (lineNumber.length < 4) {
             lineNumber = "0" + lineNumber;
           }
 
-          if(i === 15) {
+          if (i === 15) {
             $(value).append("<span>0x" + lineNumber + "</span>");
           } else {
             $(value).append("<span>0x" + lineNumber + "</span><br>");
@@ -176,93 +178,96 @@ var currentPasswords = [];
         }
       });
     },
-    "createDudCode": function() {
-      for(var i = 0; (terminalData.columns * terminalData.rows) > i; i++) {
-        var randomColumn = "";
-        for(var j = 0; terminalData.dataPerColumn > j; j++) {
-          randomColumn += dudCharacters[Math.round(Math.random() * (dudCharacters.length - 1))];
+    "createDudCode": function () {
+      // Iterate for each character
+      for (var i = 0; (terminalData.columns * terminalData.rows) > i; i++) {
+        var randomData = "";
+        // Iterate per "line"
+        for (var j = 0; terminalData.dataPerColumn > j; j++) {
+          let randomDudIndex = Math.round(Math.random() * (dudCharacters.length - 1));
+          randomData += dudCharacters[randomDudIndex];
         }
-        terminalData.code[i] = randomColumn;
-        //terminalData.markup[i] = randomColumn;
+        // console.log("Duds [" + i + "]: " + randomData);
+        terminalData.code[i] = randomData;
       }
     },
-    "createCurrentPasswords": function() {
+    "createCurrentPasswords": function () {
       currentPasswords = [];
-      
+
       // If dictionary is too small
-      if(gameData.passwordsOnScreen > passwords[gameData.difficulty]().length) {
+      if (gameData.passwordsOnScreen > passwords[gameData.difficulty]().length) {
         gameData.passwordsOnScreen = passwords[gameData.difficulty]().length;
         console.log("Dictionary " + game.getDifficulty() + "(Size: " + gameData.difficulty + ") has too few entries (" + passwords[gameData.difficulty]().length + ").");
       }
-      
+
       var tempPasswords = passwords[gameData.difficulty]().slice();
       // Pick password
       gameData.password = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
-      for(var i = 0; gameData.passwordsOnScreen > i;i++) {
+      for (var i = 0; gameData.passwordsOnScreen > i; i++) {
         currentPasswords[i] = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
-        
+
         var position = $.inArray(currentPasswords[i], tempPasswords);
-        if(~position) {
+        if (~position) {
           tempPasswords.splice(position, 1);
         }
       }
     },
-    "addPasswords": function() {
+    "addPasswords": function () {
       var tempPasswords = currentPasswords.slice();
       var blockedPositions = [];
-      
-      while(tempPasswords.length > 0) {
+
+      while (tempPasswords.length > 0) {
         var randomPosition = Math.round(Math.random() * (terminalData.maxCharacters() - gameData.difficulty)); // Password fits into last line
-        
-        if($.inArray(randomPosition, blockedPositions) > -1) {
+
+        if ($.inArray(randomPosition, blockedPositions) > -1) {
           // console.log("Hit: " + terminalData.code[Math.floor(randomPosition / (terminalData.columns * terminalData.dataPerColumn))]);
           continue; // Get a new random position
         }
-        
-        if(randomPosition < 0) {
+
+        if (randomPosition < 0) {
           randomPosition = 0;
         }
 
-        if(randomPosition >= terminalData.maxCharacters()) {
+        if (randomPosition >= terminalData.maxCharacters()) {
           console.log("Position calculation wrong: " + randomPosition + " of " + terminalData.maxCharacters());
         }
-        
+
         var linePosition = Math.floor(randomPosition / terminalData.dataPerColumn);
         var inLinePosition = randomPosition % terminalData.dataPerColumn;
-        
+
         var nextPassword = tempPasswords.shift();
-        if((linePosition + 1) > (terminalData.columns * terminalData.rows)) {
+        if ((linePosition + 1) > (terminalData.columns * terminalData.rows)) {
           console.log("Accidentally hit " + (linePosition + 1) + "th row during password insertion.");
         }
 
         var code = terminalData.code[linePosition];
-        if((inLinePosition + gameData.difficulty) > terminalData.dataPerColumn) { // Password needs more than one row
+        if ((inLinePosition + gameData.difficulty) > terminalData.dataPerColumn) { // Password needs more than one row
           var difference = terminalData.dataPerColumn - inLinePosition;
 
           var overhead = gameData.difficulty - difference;
           terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword.substr(0, difference);
-          
-          code = terminalData.code[linePosition+1];
+
+          code = terminalData.code[linePosition + 1];
           terminalData.code[linePosition + 1] = nextPassword.substr(difference, overhead) + code.substr(overhead);
-          blockedPositions.push(randomPosition, randomPosition-1, randomPosition+1, randomPosition-2, randomPosition+2, randomPosition-3, randomPosition+3, randomPosition-4, randomPosition+4);
+          blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
         } else {
           terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword + code.substr(inLinePosition + nextPassword.length);
-          blockedPositions.push(randomPosition, randomPosition-1, randomPosition+1, randomPosition-2, randomPosition+2, randomPosition-3, randomPosition+3, randomPosition-4, randomPosition+4);
+          blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
         }
       }
     },
-    "findDuds": function() {
+    "findDuds": function () {
       console.log("Terminal has size: " + terminalData.code.length);
       // Get the end duds first
       var duds = [];
-      for(var i = 0; terminalData.code.length > i; i++) {
+      for (var i = 0; terminalData.code.length > i; i++) {
         // TODO Code below hits only once. Better RegEx?
-        for(var j = terminalData.code.length; 0 < j; j--) {
+        for (var j = terminalData.code.length; 0 < j; j--) {
           var endPosition = $.inArray(terminalData.code[i][j], endDuds);
-          if(~endPosition) {
+          if (~endPosition) {
             var cutString = terminalData.code[i].substr(0, endPosition);
             var startPosition = $.inArray(startDuds[endPosition], cutString);
-            if(~startPosition) {
+            if (~startPosition) {
               duds.push([
                 {
                   "dudPos": endPosition,// Position in char string
@@ -270,56 +275,62 @@ var currentPasswords = [];
                   "endDud": j
                 }
               ]);
-              console.log("Addind duds: " + endPosition + "/" + startPosition + "/" + j);
+              console.log("Adding duds: " + endPosition + "/" + startPosition + "/" + j);
               console.log(terminalData.code[i]);
+              // TODO: Only highlights initial duds but not new.
             }
           }
         }
       }
-      if(duds.length > 0) {
+      if (duds.length > 0) {
         console.log("Final list of duds: ");
         console.log(duds);
       }
     },
-    "createMarkup": function() {
-      
+    "createMarkup": function () {
+
     },
-    "addHtml": function() {
-      // Todo: Use markup array
-      // Todo: More than two rows
-      for(var i = 0; terminalData.code.length > i; i++) {
+    "addHtml": function () {
+      // TODO: Use markup array
+      // TODO: More than two rows
+      for (var i = 0; terminalData.code.length > i; i++) {
         var selector = "";
-        if(i < 16) {
+        if (i < 16) {
           selector = '.terminal .left.code';
         } else {
           selector = '.terminal .right.code';
         }
-		
-		// Todo: Finds passwords in a single row
-		var lineValue = terminalData.code[i];
-		currentPasswords.forEach(function (value, key, array){
-		  var tempNewLineValue = lineValue.replace(value, '<span class="word" data-word="' + value + '">' + value + '</span>');
-		  lineValue = tempNewLineValue;
-		});
-        
+
+        // TODO: Finds passwords in a single row
+        var lineValue = terminalData.code[i];
+        // Workaround to fix nasty html side effects
+        lineValue = lineValue.replace("<", "&lt;");
+        lineValue = lineValue.replace(">", "&gt;");
+
+        currentPasswords.forEach(function (value, key, array) {
+          var tempNewLineValue = lineValue.replace(value, '<span class="word" data-word="' + value + '">' + value + '</span>');
+          lineValue = tempNewLineValue;
+        });
+
         $(selector).append('<span id="span' + i + '"></span><br>');
+        // Note: If rendered as html '<?' duds will break stuff.
         $('#span' + i).html(lineValue);
       }
     },
-	"addScript": function() {
-      // Todo: Simulate typing the hovered word
-      $('.code .word').on('mouseover', function(event) {
-		  var passwordHovered = event.target.textContent;
-		  console.log("Hovering: " + passwordHovered);
-		  $('.info .input').attr('data-content', passwordHovered);
-	  });
-	  $('.code .word').on('mouseout', function(event) {
-		console.log("End hover");
-		$('.info .input').attr('data-content', '');
-	  });
-	  // Todo: Merge code from createTerminal()
+    "addScript": function () {
+      // TODO: Simulate typing the hovered word
+      $('.code .word').on('mouseover', function (event) {
+        var passwordHovered = event.target.textContent;
+        console.log("Hovering: " + passwordHovered);
+        $('.info .input').attr('data-content', passwordHovered);
+      });
+      $('.code .word').on('mouseout', function (event) {
+        console.log("End hover");
+        $('.info .input').attr('data-content', '');
+      });
+      // Todo: Merge code from createTerminal()
     },
-    "createTerminal": function() {
+    "createTerminal": function () {
       game.clearOld();
 
       console.log("--- Creating pointers ---");
@@ -336,28 +347,28 @@ var currentPasswords = [];
       game.createMarkup();
       console.log("--- Add html ---");
       game.addHtml();// Create HTML
-	  console.log("--- Add events and listeners ---");
+      console.log("--- Add events and listeners ---");
       game.addScript();
-      
-      if(perks[0]["level"] >= 2) {
-        $('.code .word').each(function() {
-          if(gameData.password == $(this).data("word")) {
+
+      if (perks[0]["level"] >= 2) {
+        $('.code .word').each(function () {
+          if (gameData.password == $(this).data("word")) {
             $(this).addClass("highlight");
           }
         });
       }
-      
+
       // Create settings menubar
       // Todo move code to ui building code
       // Code by http://www.jacklmoore.com/notes/jquery-tabs/
-      $('ul.tabs').each(function(){
+      $('ul.tabs').each(function () {
         // For each set of tabs, we want to keep track of
         // which tab is active and it's associated content
         var $active, $content, $links = $(this).find('a');
 
         // If the location.hash matches one of the links, use that as the active tab.
         // If no match is found, use the first link as the initial active tab.
-        $active = $($links.filter('[href="'+location.hash+'"]')[0] || $links[0]);
+        $active = $($links.filter('[href="' + location.hash + '"]')[0] || $links[0]);
         $active.addClass('active');
 
         $content = $($active[0].hash);
@@ -368,7 +379,7 @@ var currentPasswords = [];
         });
 
         // Bind the click event handler
-        $(this).on('click', 'a', function(e){
+        $(this).on('click', 'a', function (e) {
           // Make the old tab inactive.
           $active.removeClass('active');
           $content.hide();
@@ -385,27 +396,24 @@ var currentPasswords = [];
           e.preventDefault();
         });
       });
-      
+
       // Make passwords clickable
-      $('.code .word').on('click', function(event) {
-        /*var hashedPassword = sjcl.hash.sha256.hash($(this).text());
-        if(gameData.password.join('') == hashedPassword.join('')) {*/
-	
+      $('.code .word').on('click', function (event) {
         var selectedPassword = event.target.textContent;
-        
+
         var position = $.inArray(selectedPassword, currentPasswords);
-        if(~position) {
+        if (~position) {
           currentPasswords.splice(position, 1);
         }
 
         var likeness = 0;
-        for(var i = 0; gameData.difficulty > i; i++) {
-          if(gameData.password[i] == selectedPassword[i]) {
+        for (var i = 0; gameData.difficulty > i; i++) {
+          if (gameData.password[i] == selectedPassword[i]) {
             likeness++;
           }
         }
 
-        if(gameData.password == selectedPassword) {
+        if (gameData.password == selectedPassword) {
           var oldLength = currentPasswords.length;
           game.createTerminal();
           game.addExperience(oldLength);
@@ -416,7 +424,7 @@ var currentPasswords = [];
           $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
           $('.info .input').before('<span class="likeness">Likeness=' + likeness + '</span><br>');
           $('.info .input').before('<span class="text">Entry denied.</span><br>');
-          if(gameData.attempts == 0) {
+          if (gameData.attempts == 0) {
             game.createTerminal();
             $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
             $('.info .input').before('<span class="text">Terminal locked.</span><br>');
@@ -427,36 +435,36 @@ var currentPasswords = [];
       });
 
       // Break special
-      $('.linebreak').hover(function() {
+      $('.linebreak').hover(function () {
         var dataWord = $(this).data("word");
-        var siblings = $('[data-word="'+dataWord+'"]');
-        $(siblings).each(function() {
+        var siblings = $('[data-word="' + dataWord + '"]');
+        $(siblings).each(function () {
           $(this).css("background-color", "#82FA58");
           $(this).css("color", "#0B1907");
         });
-      },function() {
+      }, function () {
         $('.linebreak').css("background-color", "#0B1907");
         $('.linebreak').css("color", "#82FA58");
       });
-      
+
       // Todo update data word :(
-      $('.pagebreak').hover(function() {
+      $('.pagebreak').hover(function () {
         $('.pagebreak').css("background-color", "#82FA58");
         $('.pagebreak').css("color", "#0B1907");
-      },function() {
+      }, function () {
         $('.pagebreak').css("background-color", "#0B1907");
         $('.pagebreak').css("color", "#82FA58");
       });
-      
+
       game.updateUI();
     }
   };
-  
-  var encodeHtmlEntity = function(str) {
+
+  var encodeHtmlEntity = function (str) {
     var buf = [];
-    for (var i = str.length-1; i >= 0 ; i--) {
+    for (var i = str.length - 1; i >= 0; i--) {
       var character = str[i].charCodeAt();
-      if(/[:alphanum:]/.test(str[i])) {
+      if (/[:alphanum:]/.test(str[i])) {
         buf.unshift([character].join(''));
       } else {
         buf.unshift(['&#', character, ';'].join(''));
@@ -464,10 +472,10 @@ var currentPasswords = [];
     }
     return buf.join('');
   };
-  
-  $(document).ready(function() {
+
+  $(document).ready(function () {
     gameData.initialValues();
     game.createTerminal();
-    $('.info .input').before('Fallout Hacker<br>Version '+ game.version +'<br>');
+    $('.info .input').before('Fallout Hacker<br>Version ' + game.version + '<br>');
   });
 })(jQuery);
