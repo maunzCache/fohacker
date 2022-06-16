@@ -33,8 +33,8 @@ const Game = require('./classes/game');
     return buf.join('');
   };
 
-  $(document).ready(function () {
+  $(function () {
     game.createTerminal();
-    $('.info .input').before('Fallout Hacker<br>Version ' + game.version + '<br>');
+    $('.info .input').before('Fallout Hacker<br>Version ' + Game.version + '<br>');
   });
 })(jQuery);

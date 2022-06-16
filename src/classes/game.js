@@ -50,7 +50,7 @@ let perks = [
 ];
 
 class Game {
-    static version = "0.1 (alpha)"
+    static version = "0.1 (alpha)" // TODO: Get from package.json
     static dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
     static startDuds = "<([{";
     static endDuds = ">)]}";
@@ -133,13 +133,15 @@ class Game {
             }
         });
         $('.perklist').append();
+
+        let _this = this; // TODO: Workaround because of scope
         $('.perkdiv').on('click', function () {
-            if (this.gameData.skillpoints > 0) {
+            if (_this.gameData.skillpoints > 0) {
                 var perkid = $(this).data("id");
                 if ((perks[perkid].level + 1) <= perks[perkid].maxlevel) {
                     perks[perkid].level++;
-                    this.gameData.skillpoints--;
-                    this.updateUI();
+                    _this.gameData.skillpoints--;
+                    _this.updateUI();
                 }
             }
         });
@@ -378,6 +380,7 @@ class Game {
     };
 
     createTerminal = function () {
+        let _this = this; // TODO: Workaround for scope
         this.clearOld();
 
         console.log("--- Creating pointers ---");
@@ -397,9 +400,9 @@ class Game {
         console.log("--- Add events and listeners ---");
         this.addScript();
 
-        if (perks[0]["level"] >= 2) {
+        if (perks[0].level >= 2) {
             $('.code .word').each(function () {
-                if (this.gameData.password == $(this).data("word")) {
+                if (_this.gameData.password == $(this).data("word")) {
                     $(this).addClass("highlight");
                 }
             });
@@ -448,41 +451,41 @@ class Game {
         $('.code .word').on('click', function (event) {
             var selectedPassword = event.target.textContent;
 
-            var position = $.inArray(selectedPassword, this.gameData.currentPasswords);
+            var position = $.inArray(selectedPassword, _this.gameData.currentPasswords.wordList);
             if (~position) {
-                this.gameData.currentPasswords.splice(position, 1);
+                _this.gameData.currentPasswords.wordList.splice(position, 1);
             }
 
             var likeness = 0;
-            for (var i = 0; this.gameData.difficulty > i; i++) {
-                if (this.gameData.password[i] == selectedPassword[i]) {
+            for (var i = 0; _this.gameData.difficulty > i; i++) {
+                if (_this.gameData.password[i] == selectedPassword[i]) {
                     likeness++;
                 }
             }
 
-            if (this.gameData.password == selectedPassword) {
-                var oldLength = this.gameData.currentPasswords.length;
-                this.createTerminal();
-                this.addExperience(oldLength);
+            if (_this.gameData.password == selectedPassword) {
+                var oldLength = _this.gameData.currentPasswords.wordList.length;
+                _this.createTerminal();
+                _this.addExperience(oldLength);
                 $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
                 $('.info .input').before('<span class="text">Access granted.</span><br>');
             } else {
-                this.gameData.attempts--;
+                _this.gameData.attempts--;
                 $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
                 $('.info .input').before('<span class="likeness">Likeness=' + likeness + '</span><br>');
                 $('.info .input').before('<span class="text">Entry denied.</span><br>');
-                if (this.gameData.attempts == 0) {
-                    this.createTerminal();
+                if (_this.gameData.attempts == 0) {
+                    _this.createTerminal();
                     $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
                     $('.info .input').before('<span class="text">Terminal locked.</span><br>');
                 }
             }
 
-            this.updateUI();
+            _this.updateUI();
         });
 
         // Break special
-        $('.linebreak').hover(function () {
+        $('.linebreak').on('mouseenter', function () {
             var dataWord = $(this).data("word");
             var siblings = $('[data-word="' + dataWord + '"]');
             $(siblings).each(function () {
@@ -495,7 +498,7 @@ class Game {
         });
 
         // Todo update data word :(
-        $('.pagebreak').hover(function () {
+        $('.pagebreak').on('mouseenter', function () {
             $('.pagebreak').css("background-color", "#82FA58");
             $('.pagebreak').css("color", "#0B1907");
         }, function () {
