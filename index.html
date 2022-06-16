@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>Fallout Hacker</title>
-  <script language="javascript" type="text/javascript" src="lib/jquery-2.2.4.js"></script>
-  <script language="javascript" type="text/javascript" src="perks.js"></script>
-  <script language="javascript" type="text/javascript" src="dictionary.js"></script>
-  <script language="javascript" type="text/javascript" src="fohacker.js"></script>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <script language="javascript" type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="dist/bundle.js"></script>
+  <link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
 
 <body>
   <div class="infobar">
-    Difficulty: <div class="difficulty"></div> | 
-    Health: <div class="health"><span class="healthbar"></span></div> | 
-    Level: <div class="level"></div> | 
-    Experience: <div class="exp"><span class="expbar"></span></div> | 
+    Difficulty: <div class="difficulty"></div> |
+    Health: <div class="health"><span class="healthbar"></span></div> |
+    Level: <div class="level"></div> |
+    Experience: <div class="exp"><span class="expbar"></span></div> |
     Caps: <div class="caps">1'000'000</div>
   </div>
   <div class="terminal">
     <div class="header">
       <p>Welcome to ROBCO Industries (TM) Termlink</p>
       <p>Password Required <span class="password"></span></p>
-      <p id="attempts">Attempts Remaining: 
+      <p id="attempts">Attempts Remaining:
       </p>
     </div>
     <div class="linenumber column">
@@ -65,4 +64,5 @@
   <div class="perklist">
   </div>
 </body>
+
 </html>
