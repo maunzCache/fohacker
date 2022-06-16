@@ -1,6 +1,6 @@
 'use strict';
 
-export default class TerminalData {
+class TerminalData {
     constructor() {
         this.rows = 16;
         this.columns = 2;// Number of "pages"
@@ -21,3 +21,5 @@ export default class TerminalData {
         return returnString;
     };
 };
+
+module.exports = TerminalData;

@@ -1,8 +1,8 @@
 'use strict';
 
-import GameData from './gamedata';
-import Perk from './perk';
-import TerminalData from './terminaldata';
+const GameData = require('./gamedata');
+const Perk = require('./perk');
+const TerminalData = require('./terminaldata');
 
 let perks = [
     new Perk(
@@ -49,7 +49,7 @@ let perks = [
         0, 1),
 ];
 
-export default class Game {
+class Game {
     static version = "0.1 (alpha)"
     static dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
     static startDuds = "<([{";
@@ -506,3 +506,5 @@ export default class Game {
         this.updateUI();
     };
 };
+
+module.exports = Game;

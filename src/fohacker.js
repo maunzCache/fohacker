@@ -15,7 +15,7 @@
 
 'use strict';
 
-import Game from './classes/game';
+const Game = require('./classes/game');
 
 (function ($) {
   var game = new Game();

@@ -1,7 +1,9 @@
 'use strict';
 
-export default class Dictionary {
+class Dictionary {
   constructor(wordList) {
     this.wordList = wordList;
   };
 };
+
+module.exports = Dictionary;

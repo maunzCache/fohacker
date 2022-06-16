@@ -1,6 +1,6 @@
 'use strict';
 
-export default class Perk {
+class Perk {
   constructor(title, description, maxlevel) {
     this.title = title;
     this.description = description;
@@ -9,3 +9,5 @@ export default class Perk {
     this.meetsRequirements = true; // TODO: Implement!
   };
 };
+
+module.exports = Perk;

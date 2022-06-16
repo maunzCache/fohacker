@@ -1,6 +1,6 @@
 'use strict';
 
-import Dictionary from './dictionary';
+const Dictionary = require('./dictionary');
 
 var passwords = {
     4: new Dictionary([
@@ -36,7 +36,7 @@ var passwords = {
     ])
 };
 
-export default class GameData {
+class GameData {
     constructor() {
         this.passwordsOnScreen = 14;
         this.attempts = 4;
@@ -52,3 +52,5 @@ export default class GameData {
         this.maxhealth = 100;
     };
 };
+
+module.exports = GameData;
