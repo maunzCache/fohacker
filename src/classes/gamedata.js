@@ -2,6 +2,7 @@
 
 const Dictionary = require('./dictionary');
 
+// TODO: Implement loading from assets folder as JSON
 var passwords = {
     4: new Dictionary([
         "SAFE",

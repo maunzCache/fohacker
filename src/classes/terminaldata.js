@@ -14,11 +14,7 @@ class TerminalData {
     };
 
     codeString = function () {
-        var returnString = "";
-        for (var i = 0; this.code.length > i; i++) {
-            returnString += this.code[i];
-        }
-        return returnString;
+        return this.code.join("");
     };
 };
 

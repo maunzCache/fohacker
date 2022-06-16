@@ -2,8 +2,13 @@
 
 const GameData = require('./gamedata');
 const Perk = require('./perk');
+const Renderer = require('../renderer');
 const TerminalData = require('./terminaldata');
 
+// TODO: Deprecated. Replace with Renderer.
+const $ = require('jquery');
+
+// TODO: Implement loading from assets folder as JSON
 let perks = [
     new Perk(
         "Peek-A-Boo",
@@ -72,7 +77,7 @@ class Game {
             if (possibleOverhead <= 0) {
                 this.gameData.level++;
                 this.gameData.skillpoints++;
-                $('.info .input').before('<span class="info">Level Up</span><br>');
+                Renderer.addLevelUpBeforeInfoInput();
                 this.gameData.totalExperience += this.gameData.experience;
                 this.gameData.experience = Math.abs(possibleOverhead);
             }
@@ -82,7 +87,7 @@ class Game {
     addExperience = function (words) {
         var addExp = Math.round((words + 1) * this.gameData.difficulty * 0.35);
         this.gameData.experience += addExp;
-        $('.info .input').before('<span class="info">EXP +' + addExp + '</span><br>');
+        Renderer.addExpBeforeInfoInput(addExp);
         this.levelUp();
     };
 
@@ -148,36 +153,20 @@ class Game {
     };
 
     clearOld = function () {
-        $('.terminal .linenumber').empty();
-        $('.terminal .code').empty();
+        // TODO: This can obviously be refactored.
+        Renderer.emptyTerminalLinenumber();
+        Renderer.emptyTerminalCode();
         this.gameData.attempts = 4;
         this.gameData.currentPasswords = this.gameData.passwords[this.gameData.difficulty];
-        $('.info').empty();
-        $('.info').append('<span class="input">&nbsp</span>');
+        Renderer.emptyInfo();
+        Renderer.appendInputSpanToInfo();
     };
 
     createPointers = function () {
-        var _this = this; // TODO: Workaround because of scoping
         var lineNumber = Math.random().toString(16).slice(2, 6);
 
-        $('.terminal .linenumber').each(function (key, value) {
-            for (var i = 0; i < _this.terminalData.rows; i++) {
-                lineNumber = (parseInt(lineNumber, _this.terminalData.rows) + (i * 12)).toString(16).toUpperCase();// Todo allow overflow!
-
-                if (lineNumber.length > 4) {
-                    lineNumber = lineNumber.slice(1, 5);
-                }
-                while (lineNumber.length < 4) {
-                    lineNumber = "0" + lineNumber;
-                }
-
-                if (i === 15) {
-                    $(value).append("<span>0x" + lineNumber + "</span>");
-                } else {
-                    $(value).append("<span>0x" + lineNumber + "</span><br>");
-                }
-            }
-        });
+        // TODO: What is key, what is value?
+        Renderer.createPointersForEachTerminalLinenumber(this.terminalData, lineNumber);
     };
 
     createDudCode = function () {

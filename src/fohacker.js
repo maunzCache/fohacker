@@ -1,25 +1,14 @@
-/* Todos
- * - Change RegExp approach and make it work
- *   - Make dud word removal work
- * - Have functions to update a specific ui element
- * - Find correct closures and merge stuff
- * - Give perks string key or getByTitle function
- * - Upgrade css (after feedback?)
- * - Implement more gameplay (lose hp on hacking fail, gameover?, stimpacks, radiation, S.P.E.C.I.A.L., ...)
- *   - Implements more perks and make old ones working
- *   - Fill dictionary
- * - Release game and write about it on reddit
- * - Limit info output to 16 lines
- * - Replace var with let where possible
-*/
-
 'use strict';
 
 const Game = require('./classes/game');
 
+// TODO: Deprecated. Replace with Renderer.
+const jQuery = require('jquery');
+
 (function ($) {
   var game = new Game();
 
+  // TODO: Find out if still relevant and where to put this code
   var encodeHtmlEntity = function (str) {
     var buf = [];
     for (var i = str.length - 1; i >= 0; i--) {
