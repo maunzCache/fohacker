@@ -3,38 +3,40 @@
 const Dictionary = require('./dictionary');
 
 // TODO: Implement loading from assets folder as JSON
-var passwords = {
-    4: new Dictionary([
-        "SAFE",
-        "HACK",
-        "CORE",
-        "TIME",
-        "NONE",
-        "SORT",
-        "ROLL",
-        "HUNT",
-        "BURN",
-        "WIRE",
-        "TOOL",
-        "BACK",
-        "BLUE",
-        "HARD",
-        "FIRE",
-        "TIRE",
-        "MIND"
-    ]),
-    5: new Dictionary([
-        "WOUND",
-    ]),
-    6: new Dictionary([
-        "WEAPON",
-    ]),
-    7: new Dictionary([
-        "ABCDEFG",
-    ]),
-    8: new Dictionary([
-        "ABCDEFGH",
-    ])
+var passwords = function () {
+    return {
+        4: new Dictionary([
+            "SAFE",
+            "HACK",
+            "CORE",
+            "TIME",
+            "NONE",
+            "SORT",
+            "ROLL",
+            "HUNT",
+            "BURN",
+            "WIRE",
+            "TOOL",
+            "BACK",
+            "BLUE",
+            "HARD",
+            "FIRE",
+            "TIRE",
+            "MIND"
+        ]),
+        5: new Dictionary([
+            "WOUND",
+        ]),
+        6: new Dictionary([
+            "WEAPON",
+        ]),
+        7: new Dictionary([
+            "ABCDEFG",
+        ]),
+        8: new Dictionary([
+            "ABCDEFGH",
+        ])
+    }
 };
 
 class GameData {

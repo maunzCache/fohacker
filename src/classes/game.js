@@ -161,7 +161,7 @@ class Game {
         Renderer.emptyTerminalLinenumber();
         Renderer.emptyTerminalCode();
         this.gameData.attempts = 4;
-        this.gameData.currentPasswords = this.gameData.passwords[this.gameData.difficulty];
+        this.gameData.currentPasswords = this.gameData.passwords()[this.gameData.difficulty];
         Renderer.emptyInfo();
         Renderer.appendInputSpanToInfo();
     };
@@ -191,7 +191,7 @@ class Game {
         let currentPasswords = [];
 
         // If dictionary is too small
-        let passwordsForDifficulty = this.gameData.passwords[this.gameData.difficulty];
+        let passwordsForDifficulty = this.gameData.passwords()[this.gameData.difficulty];
         let amountOfPasswords = passwordsForDifficulty.length;
         if (this.gameData.passwordsOnScreen > amountOfPasswords) {
             this.gameData.passwordsOnScreen = amountOfPasswords;
