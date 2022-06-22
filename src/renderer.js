@@ -2,6 +2,8 @@
 
 const $ = require('jquery');
 
+const Game = require('./classes/game');
+
 class Renderer {
     // TODO: Implement testing
     static addLevelUpBeforeInfoInput = function () {
@@ -56,6 +58,10 @@ class Renderer {
         } else {
             $(value).append("<span>0x" + lineNumber + "</span><br>");
         }
+    }
+
+    static addFOHackerVersionBeforeInfoInput = function () {
+        $('.info .input').before('Fallout Hacker<br>Version ' + Game.version + '<br>');
     }
 }
 

@@ -1,11 +1,9 @@
 'use strict';
 
 const Game = require('./classes/game');
+const Renderer = require('./renderer');
 
-// TODO: Deprecated. Replace with Renderer.
-const jQuery = require('jquery');
-
-(function ($) {
+(function () {
   var game = new Game();
 
   // TODO: Find out if still relevant and where to put this code
@@ -22,8 +20,9 @@ const jQuery = require('jquery');
     return buf.join('');
   };
 
-  $(function () {
+  window.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed');
     game.createTerminal();
-    $('.info .input').before('Fallout Hacker<br>Version ' + Game.version + '<br>');
+    Renderer.addFOHackerVersionBeforeInfoInput();
   });
-})(jQuery);
+})();

@@ -142,4 +142,99 @@ describe('Game', () => {
 
         expect(actualResult);
     });
+
+    test('createDudCode', () => {
+        // TODO: Implement better test
+        let testGame = new Game();
+
+        testGame.createDudCode();
+        let actualResult = testGame.terminalData
+
+        expect(actualResult);
+    });
+
+    test('createCurrentPasswords', () => {
+        // TODO: Implement better test
+        let testGame = new Game();
+
+        testGame.createCurrentPasswords();
+        let actualResult = testGame.gameData.password
+
+        expect(actualResult);
+    });
+
+    test('addPasswords', () => {
+        // TODO: Implement better test
+        let testGame = new Game();
+        testGame.createCurrentPasswords()
+
+        testGame.addPasswords();
+        let actualResult = testGame.gameData.password
+
+        expect(actualResult);
+    });
+
+    test('findDuds', () => {
+        // TODO: Implement better test
+        let testGame = new Game();
+        testGame.createDudCode()
+
+        let actualResult = testGame.findDuds();
+
+        expect(actualResult);
+    });
+
+    test('createMarkup', () => {
+        // TODO: Implement better test and well actual function
+        let testGame = new Game();
+
+        let actualResult = testGame.createMarkup();
+
+        expect(actualResult);
+    });
+
+    test('addHtml', () => {
+        // TODO: Implement better test and well actual function
+        document.body.innerHTML =
+            '<div class="terminal">' +
+            '    <div class="left code"></div>' +
+            '    <div class="right code"></div>' +
+            '</div>';
+
+        let testGame = new Game();
+
+        let actualResult = testGame.addHtml();
+
+        expect(actualResult);
+    });
+
+    test('addScript', () => {
+        // TODO: Implement better test and well actual function
+        document.body.innerHTML =
+            '<div class="terminal">' +
+            '    <div class="left code"></div>' +
+            '    <div class="right code"></div>' +
+            '</div>';
+
+        let testGame = new Game();
+
+        let actualResult = testGame.addScript();
+
+        expect(actualResult);
+    });
+
+    test('createTerminal', () => {
+        // TODO: Implement better test and well actual function
+        document.body.innerHTML =
+            '<div class="terminal">' +
+            '    <div class="left code"></div>' +
+            '    <div class="right code"></div>' +
+            '</div>';
+
+        let testGame = new Game();
+
+        let actualResult = testGame.createTerminal();
+
+        expect(actualResult);
+    });
 });

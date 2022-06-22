@@ -16,42 +16,46 @@ let perks = [
             "You can see the current password but you still have to click it by yourself.",
             "Less searching, more clicking. The password gets highlighted too."
         ],
-        2, 2),
+        2),
     new Perk(
         "More Of The Same",
         [
             "More possibilities. More trying. More experience."
         ],
-        0, 1),
+        0),
     new Perk(
         "Just One More Minute ...",
         [
-            "Increases max.attempts.",
-            "Increases max.attempts.",
-            "Increases max.attempts.",
-            "Increases max.attempts.",
-            "Increases max.attempts.",
-            "Increases max.attempts."
+            "Increases max. attempts.",
+            "Increases max. attempts.",
+            "Increases max. attempts.",
+            "Increases max. attempts.",
+            "Increases max. attempts.",
+            "Increases max. attempts."
         ],
-        0, 6),
+        0),
     new Perk(
         "Enter The Matrix",
         [
-            "Highlight duds."
+            "Highlight duds.",
+            "Multiline duds."
         ],
-        0, 1),
+        0),
     new Perk(
         "Rubbersome",
         [
-            "Be rubber, my friend. Less damage when shocked by a locked terminal."
+            "Be rubber, my friend. Less damage when shocked by a locked terminal.",
+            "Reduce damage even more when shocked by a locked terminal.",
+            "No more damage from locked terminal.",
+            "Get one more attempt when locking the terminal",
         ],
-        0, 1),
+        0),
     new Perk(
         "Nerd Rage",
         [
-            "Stop typing passwords. Start smashing terminals."
+            "Stop typing passwords. Start smashing terminals. Half the money, but skip the current attempt. Needs to be charged."
         ],
-        0, 1),
+        0),
 ];
 
 class Game {
@@ -73,7 +77,7 @@ class Game {
         let nextExp = this.nextLevelExp();
 
         while (this.gameData.experience > nextExp) {
-            var possibleOverhead = nextExp - this.gameData.experience;
+            let possibleOverhead = nextExp - this.gameData.experience;
             if (possibleOverhead <= 0) {
                 this.gameData.level++;
                 this.gameData.skillpoints++;
@@ -85,7 +89,7 @@ class Game {
     };
 
     addExperience = function (words) {
-        var addExp = Math.round((words + 1) * this.gameData.difficulty * 0.35);
+        let addExp = Math.round((words + 1) * this.gameData.difficulty * 0.35);
         this.gameData.experience += addExp;
         Renderer.addExpBeforeInfoInput(addExp);
         this.levelUp();
@@ -163,7 +167,7 @@ class Game {
     };
 
     createPointers = function () {
-        var lineNumber = Math.random().toString(16).slice(2, 6);
+        let lineNumber = Math.random().toString(16).slice(2, 6);
 
         // TODO: What is key, what is value?
         Renderer.createPointersForEachTerminalLinenumber(this.terminalData, lineNumber);
@@ -172,7 +176,7 @@ class Game {
     createDudCode = function () {
         // Iterate for each character
         for (var i = 0; (this.terminalData.columns * this.terminalData.rows) > i; i++) {
-            var randomData = "";
+            let randomData = "";
             // Iterate per "line"
             for (var j = 0; this.terminalData.dataPerColumn > j; j++) {
                 let randomDudIndex = Math.round(Math.random() * (Game.dudCharacters.length - 1));
@@ -184,7 +188,7 @@ class Game {
     };
 
     createCurrentPasswords = function () {
-        var currentPasswords = [];
+        let currentPasswords = [];
 
         // If dictionary is too small
         let passwordsForDifficulty = this.gameData.passwords[this.gameData.difficulty];
@@ -194,13 +198,13 @@ class Game {
             console.log("Dictionary " + this.getDifficulty() + "(Size: " + this.gameData.difficulty + ") has too few entries (" + amountOfPasswords + ").");
         }
 
-        var tempPasswords = passwordsForDifficulty.wordList.slice();
+        let tempPasswords = passwordsForDifficulty.wordList.slice();
         // Pick password
         this.gameData.password = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
         for (var i = 0; this.gameData.passwordsOnScreen > i; i++) {
             currentPasswords[i] = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
 
-            var position = $.inArray(currentPasswords[i], tempPasswords);
+            let position = tempPasswords.indexOf(currentPasswords[i], tempPasswords);
             if (~position) {
                 tempPasswords.splice(position, 1);
             }
@@ -209,14 +213,13 @@ class Game {
     };
 
     addPasswords = function () {
-        var tempPasswords = this.gameData.currentPasswords.wordList.slice();
-        var blockedPositions = [];
+        let tempPasswords = this.gameData.currentPasswords.wordList.slice();
+        let blockedPositions = [];
 
         while (tempPasswords.length > 0) {
-            var randomPosition = Math.round(Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty)); // Password fits into last line
+            let randomPosition = Math.round(Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty)); // Password fits into last line
 
-            if ($.inArray(randomPosition, blockedPositions) > -1) {
-                // console.log("Hit: " + terminalData.code[Math.floor(randomPosition / (terminalData.columns * terminalData.dataPerColumn))]);
+            if (blockedPositions.indexOf(randomPosition) > -1) {
                 continue; // Get a new random position
             }
 
@@ -228,27 +231,34 @@ class Game {
                 console.log("Position calculation wrong: " + randomPosition + " of " + this.terminalData.maxCharacters());
             }
 
-            var linePosition = Math.floor(randomPosition / this.terminalData.dataPerColumn);
-            var inLinePosition = randomPosition % this.terminalData.dataPerColumn;
+            let linePosition = Math.floor(randomPosition / this.terminalData.dataPerColumn);
+            let inLinePosition = randomPosition % this.terminalData.dataPerColumn;
 
-            var nextPassword = tempPasswords.shift();
+            let nextPassword = tempPasswords.shift();
             if ((linePosition + 1) > (this.terminalData.columns * this.terminalData.rows)) {
                 console.log("Accidentally hit " + (linePosition + 1) + "th row during password insertion.");
             }
 
+            // TODO: Check in test if there is a dependency to another method
+            // Code seems to be undefined
             var code = this.terminalData.code[linePosition];
-            if ((inLinePosition + this.gameData.difficulty) > this.terminalData.dataPerColumn) { // Password needs more than one row
-                var difference = this.terminalData.dataPerColumn - inLinePosition;
 
-                var overhead = this.gameData.difficulty - difference;
-                this.terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword.substr(0, difference);
+            if (code) {
+                if ((inLinePosition + this.gameData.difficulty) > this.terminalData.dataPerColumn) { // Password needs more than one row
+                    let difference = this.terminalData.dataPerColumn - inLinePosition;
 
-                code = this.terminalData.code[linePosition + 1];
-                this.terminalData.code[linePosition + 1] = nextPassword.substr(difference, overhead) + code.substr(overhead);
-                blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
+                    let overhead = this.gameData.difficulty - difference;
+                    this.terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword.substr(0, difference);
+
+                    code = this.terminalData.code[linePosition + 1];
+                    this.terminalData.code[linePosition + 1] = nextPassword.substr(difference, overhead) + code.substr(overhead);
+                    blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
+                } else {
+                    this.terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword + code.substr(inLinePosition + nextPassword.length);
+                    blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
+                }
             } else {
-                this.terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword + code.substr(inLinePosition + nextPassword.length);
-                blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
+                console.log("code is not defined. Implement testing.")
             }
         }
     };
@@ -256,14 +266,14 @@ class Game {
     findDuds = function () {
         console.log("Terminal has size: " + this.terminalData.code.length);
         // Get the end duds first
-        var duds = [];
+        let duds = [];
         for (var i = 0; this.terminalData.code.length > i; i++) {
             // TODO Code below hits only once. Better RegEx?
             for (var j = this.terminalData.code.length; 0 < j; j--) {
-                var endPosition = $.inArray(this.terminalData.code[i][j], Game.endDuds);
+                let endPosition = Game.endDuds.indexOf(this.terminalData.code[i][j]);
                 if (~endPosition) {
-                    var cutString = this.terminalData.code[i].substr(0, endPosition);
-                    var startPosition = $.inArray(Game.startDuds[endPosition], cutString);
+                    let cutString = this.terminalData.code[i].substr(0, endPosition);
+                    let startPosition = cutString.indexOf(Game.startDuds[endPosition]);
                     if (~startPosition) {
                         duds.push([
                             {
@@ -344,6 +354,7 @@ class Game {
                 // TODO: One line can yield multiple passwords for small lengths
             });
 
+            // TODO: Move to renderer
             $(selector).append('<span id="span' + i + '"></span><br>');
             // Note: If rendered as html some duds will break stuff.
             $('#span' + i).html(lineValue);
@@ -355,9 +366,10 @@ class Game {
     };
 
     addScript = function () {
+        // TODO: Move to renderer
         // TODO: Simulate typing the hovered word
         $('.code .word').on('mouseover', function (event) {
-            var passwordHovered = event.target.textContent;
+            let passwordHovered = event.target.textContent;
             console.log("Hovering: " + passwordHovered);
             $('.info .input').attr('data-content', passwordHovered);
         });
@@ -389,6 +401,7 @@ class Game {
         console.log("--- Add events and listeners ---");
         this.addScript();
 
+        // TODO: Move some code to renderer
         if (perks[0].level >= 2) {
             $('.code .word').each(function () {
                 if (_this.gameData.password == $(this).data("word")) {
@@ -438,14 +451,14 @@ class Game {
 
         // Make passwords clickable
         $('.code .word').on('click', function (event) {
-            var selectedPassword = event.target.textContent;
+            let selectedPassword = event.target.textContent;
 
-            var position = $.inArray(selectedPassword, _this.gameData.currentPasswords.wordList);
+            let position = _this.gameData.currentPasswords.wordList.indexOf(selectedPassword);
             if (~position) {
                 _this.gameData.currentPasswords.wordList.splice(position, 1);
             }
 
-            var likeness = 0;
+            let likeness = 0;
             for (var i = 0; _this.gameData.difficulty > i; i++) {
                 if (_this.gameData.password[i] == selectedPassword[i]) {
                     likeness++;
@@ -453,7 +466,7 @@ class Game {
             }
 
             if (_this.gameData.password == selectedPassword) {
-                var oldLength = _this.gameData.currentPasswords.wordList.length;
+                let oldLength = _this.gameData.currentPasswords.wordList.length;
                 _this.createTerminal();
                 _this.addExperience(oldLength);
                 $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
@@ -475,8 +488,8 @@ class Game {
 
         // Break special
         $('.linebreak').on('mouseenter', function () {
-            var dataWord = $(this).data("word");
-            var siblings = $('[data-word="' + dataWord + '"]');
+            let dataWord = $(this).data("word");
+            let siblings = $('[data-word="' + dataWord + '"]');
             $(siblings).each(function () {
                 $(this).css("background-color", "#82FA58");
                 $(this).css("color", "#0B1907");

@@ -1,11 +1,11 @@
 'use strict';
 
 class Perk {
-  constructor(title, description, level, maxlevel) {
+  constructor(title, description, level) {
     this.title = title;
     this.description = description;
     this.level = level ? level : 0;
-    this.maxlevel = maxlevel;
+    this.maxlevel = description.length;
     this.meetsRequirements = true; // TODO: Implement!
   };
 };
