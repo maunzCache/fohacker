@@ -2,7 +2,7 @@
 
 class TerminalData {
     constructor() {
-        this.rows = 16;
+        this.rowsPerColumn = 16;
         this.columns = 2;// Number of "pages"
         this.dataPerColumn = 12;// Characters per column
         this.code = [];
@@ -10,7 +10,7 @@ class TerminalData {
     }
 
     maxCharacters = function () {
-        return this.dataPerColumn * this.rows * this.columns;
+        return this.dataPerColumn * this.rowsPerColumn * this.columns;
     };
 
     codeString = function () {

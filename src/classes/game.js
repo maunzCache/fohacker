@@ -163,27 +163,28 @@ class Game {
         Renderer.appendInputSpanToInfo();
     };
 
-    createPointers = function () {
+    createPointersForTerminal = function () {
         let lineNumber = Math.random().toString(16).slice(2, 6);
-
         Renderer.createPointersForEachTerminalLinenumber(this.terminalData, lineNumber);
     };
 
     createDudCode = function () {
+        // TODO: Replace with code that ensures duds by using a certain skill
         // Iterate for each character
-        for (var i = 0; (this.terminalData.columns * this.terminalData.rows) > i; i++) {
+        for (var dataIndex = 0; (this.terminalData.columns * this.terminalData.rowsPerColumn) > dataIndex; dataIndex++) {
             let randomData = "";
             // Iterate per "line"
-            for (var j = 0; this.terminalData.dataPerColumn > j; j++) {
+            for (var rowNumber = 0; this.terminalData.dataPerColumn > rowNumber; rowNumber++) {
                 let randomDudIndex = Math.round(Math.random() * (DudHelper.dudCharacters.length - 1));
                 randomData += DudHelper.dudCharacters[randomDudIndex];
             }
-            console.debug("Duds [" + i + "]: " + randomData);
-            this.terminalData.code[i] = randomData;
+            console.debug("Duds [" + dataIndex + "]: " + randomData);
+            this.terminalData.code[dataIndex] = randomData;
         }
     };
 
     createCurrentPasswords = function () {
+        // TODO: Replace with code that ensures passwords by using a certain skill
         let currentPasswords = [];
 
         // If dictionary is too small
@@ -197,10 +198,10 @@ class Game {
         let tempPasswords = passwordsForDifficulty.wordList.slice();
         // Pick password
         this.gameData.password = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
-        for (var i = 0; this.gameData.passwordsOnScreen > i; i++) {
-            currentPasswords[i] = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
+        for (var passwordIndex = 0; this.gameData.passwordsOnScreen > passwordIndex; passwordIndex++) {
+            currentPasswords[passwordIndex] = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
 
-            let position = tempPasswords.indexOf(currentPasswords[i], tempPasswords);
+            let position = tempPasswords.indexOf(currentPasswords[passwordIndex], tempPasswords);
             if (~position) {
                 tempPasswords.splice(position, 1);
             }
@@ -209,55 +210,38 @@ class Game {
         this.gameData.currentPasswords = new Dictionary(currentPasswords)
     };
 
-    addPasswords = function () {
+    addPasswordsToData = function () {
         let tempPasswords = this.gameData.currentPasswords.wordList.slice();
         let blockedPositions = [];
 
         while (tempPasswords.length > 0) {
-            let randomPosition = Math.round(Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty)); // Password fits into last line
-
-            if (randomPosition < 0) {
-                randomPosition = 0;
+            let randomIndex = this.getRandomIndexForPasswordStart(blockedPositions);
+            if (randomIndex == -1) {
+                continue
             }
 
-            if (blockedPositions.indexOf(randomPosition) > -1) {
-                continue; // Get a new random position
-            }
-
-            if (randomPosition >= this.terminalData.maxCharacters()) {
-                console.log("Position calculation wrong: " + randomPosition + " of " + this.terminalData.maxCharacters());
-            }
-
-            let rowNumber = Math.floor(randomPosition / this.terminalData.dataPerColumn);
-            let columnNumber = randomPosition % (this.terminalData.dataPerColumn);
+            let rowNumberFromRandomIndex = Math.floor(randomIndex / this.terminalData.dataPerColumn);
+            let columnNumberFromRandomIndex = randomIndex % (this.terminalData.dataPerColumn);
 
             let nextPassword = tempPasswords.shift();
-            if ((rowNumber + 1) > (this.terminalData.columns * this.terminalData.rows)) {
-                console.log("Accidentally hit " + (rowNumber + 1) + "th row during password insertion.");
+            if ((rowNumberFromRandomIndex + 1) > (this.terminalData.columns * this.terminalData.rowsPerColumn)) {
+                console.log("Accidentally hit " + (rowNumberFromRandomIndex + 1) + "th row during password insertion.");
             }
 
             // TODO: Check in test if there is a dependency to another method
             // Code seems to be undefined
-            let rowIndex = rowNumber; // TODO: Potential off-by-one error
-            let columnIndex = columnNumber;
+            let rowIndex = rowNumberFromRandomIndex; // TODO: Potential off-by-one error
+            let columnIndex = columnNumberFromRandomIndex;
             let code = this.terminalData.code[rowIndex];
 
             if (code) {
                 // TODO: Some words are selected but don't exist in code...
                 if ((columnIndex + this.gameData.difficulty) > this.terminalData.dataPerColumn) { // Password needs more than one row
-                    // TODO: Don't support line breaks for now
                     continue;
-                    // let difference = this.terminalData.dataPerColumn - columnIndex;
-
-                    // let overhead = this.gameData.difficulty - difference;
-                    // this.terminalData.code[rowIndex] = code.substr(0, columnIndex) + nextPassword.substr(0, difference);
-
-                    // code = this.terminalData.code[rowIndex + 1];
-                    // this.terminalData.code[rowIndex + 1] = nextPassword.substr(difference, overhead) + code.substr(overhead);
-                    // blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
-                } else if ((rowIndex >= 0) && (rowIndex <= (this.terminalData.rows * this.terminalData.rows - 1))) {
+                } else if ((rowIndex >= 0) && (rowIndex <= (this.terminalData.rowsPerColumn * this.terminalData.columns - 1))) {
                     this.terminalData.code[rowIndex] = code.substr(0, columnIndex) + nextPassword + code.substr(columnIndex + nextPassword.length);
-                    blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
+                    // TODO: Refactor blocked position to work like duds.
+                    blockedPositions.push(randomIndex, randomIndex - 1, randomIndex + 1, randomIndex - 2, randomIndex + 2, randomIndex - 3, randomIndex + 3, randomIndex - 4, randomIndex + 4);
                 } else {
                     console.error("Row calculation row for password", rowIndex, nextPassword);
                 }
@@ -267,21 +251,39 @@ class Game {
         }
     };
 
+    getRandomIndexForPasswordStart = function (blockedPositions) {
+        let randomPosition = Math.round(Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty)); // Password fits into last line
+
+        if (randomPosition < 0) {
+            randomPosition = 0;
+        }
+
+        if (blockedPositions.indexOf(randomPosition) > -1) {
+            randomPosition = -1; // Get a new random position
+        }
+
+        if (randomPosition >= this.terminalData.maxCharacters()) {
+            console.log("Position calculation wrong: " + randomPosition + " of " + this.terminalData.maxCharacters());
+        }
+
+        return randomPosition;
+    };
+
     findDuds = function () {
         console.log("Terminal has size: " + this.terminalData.code.length);
         // Get the end duds first
         let duds = [];
-        for (var i = 0; this.terminalData.code.length > i; i++) {
-            // TODO Code below hits only once. Better RegEx?
-            for (var j = this.terminalData.code.length; 0 < j; j--) {
-                let endPosition = DudHelper.endDuds.indexOf(this.terminalData.code[i][j]);
+        for (var rowIndex = 0; this.terminalData.code.length > rowIndex; rowIndex++) {
+            // TODO: Code below hits only once. Better RegEx?
+            for (var indexInColumn = this.terminalData.code[0].length; 0 < indexInColumn; indexInColumn--) {
+                let endPosition = DudHelper.endDuds.indexOf(this.terminalData.code[rowIndex][indexInColumn]); // TODO: This whole mess makes no sense
                 if (~endPosition) {
-                    let cutString = this.terminalData.code[i].substr(0, endPosition);
+                    let cutString = this.terminalData.code[rowIndex].substr(0, endPosition);
                     let startPosition = cutString.indexOf(DudHelper.startDuds[endPosition]);
                     if (~startPosition) {
-                        duds.push([new Dud(endPosition, startPosition, j)]);
-                        console.log("Adding duds: " + endPosition + "/" + startPosition + "/" + j);
-                        console.debug(this.terminalData.code[i]);
+                        duds.push([new Dud(endPosition, startPosition, indexInColumn)]);
+                        console.log("Adding duds: " + endPosition + "/" + startPosition + "/" + indexInColumn);
+                        console.debug(this.terminalData.code[rowIndex]);
                         // TODO: Only highlights initial duds but not new.
                     }
                 }
@@ -294,6 +296,7 @@ class Game {
     };
 
     createMarkup = function () {
+        // TODO: Maybe no longer required
     };
 
     addHtml = function () {
@@ -302,17 +305,17 @@ class Game {
 
         // TODO: Use markup array
         // TODO: More than two rows
-        for (var i = 0; this.terminalData.code.length > i; i++) {
+        for (var rowIndex = 0; this.terminalData.code.length > rowIndex; rowIndex++) {
             var selector = "";
-            if (i < 16) {
+            if (rowIndex < this.terminalData.rowsPerColumn) {
                 selector = '.terminal .left.code';
             } else {
                 selector = '.terminal .right.code';
             }
 
             // TODO: Finds passwords in a single row
-            let lineValue = this.terminalData.code[i];
-            // Workaround to fix nasty html side effects
+            let lineValue = this.terminalData.code[rowIndex];
+            // Workaround to fix nasty html side effects; does it break the < > dud?
             lineValue = lineValue.replace(/</g, "&lt;");
             lineValue = lineValue.replace(/>/g, "&gt;");
 
@@ -327,13 +330,13 @@ class Game {
                 // TODO: Can contain non replaced word
                 // Look a head if word is in next line
                 if (tempNewLineValue === lineValue) {
-                    if (i < _this.terminalData.code.length - 1) {
+                    if (rowIndex < _this.terminalData.code.length - 1) {
                         // Find the index in the line we need to look up for the split word
                         // e.g. a 4 letter word can have a max of 3 chars and a min of 1 char in one line
                         let limitOldLine = (_this.terminalData.dataPerColumn - 1) - (value.length - 1);// Actually this will be an index
 
                         let limitNewLine = (value.length - 1);// Also an index
-                        let lineLookAhead = _this.terminalData.code[i].substr(limitOldLine) + _this.terminalData.code[i + 1].substr(0, limitNewLine + 1);
+                        let lineLookAhead = _this.terminalData.code[rowIndex].substr(limitOldLine) + _this.terminalData.code[rowIndex + 1].substr(0, limitNewLine + 1);
                         console.debug("Lookahead ", value, limitOldLine, limitNewLine, lineLookAhead);
 
                         // This is the index of the cut and spliced lines
@@ -354,9 +357,9 @@ class Game {
             });
 
             // TODO: Move to renderer
-            $(selector).append('<span id="span' + i + '"></span><br>');
+            $(selector).append('<span id="span' + rowIndex + '"></span><br>');
             // Note: If rendered as html some duds will break stuff.
-            $('#span' + i).html(lineValue);
+            $('#span' + rowIndex).html(lineValue);
 
             tmpPasswords = tmpPasswords.filter(function (value, key, array) {
                 return value !== replacedPassword;
@@ -384,13 +387,13 @@ class Game {
         this.clearOld();
 
         console.log("--- Creating pointers ---");
-        this.createPointers();// Create "random" line numbers
+        this.createPointersForTerminal();// Create "random" line numbers
         console.log("--- Creating duds---");
         this.createDudCode();// Create password text filled with duds
         console.log("--- Create passwords ---");
         this.createCurrentPasswords();// Generate current password list
         console.log("--- Merge passwords and duds ---");
-        this.addPasswords();// Merge duds and passwords
+        this.addPasswordsToData();// Merge duds and passwords
         console.log("--- Find/highlight duds---");
         this.findDuds();
         console.log("--- Create markup ---");

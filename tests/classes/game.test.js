@@ -129,7 +129,7 @@ describe('Game', () => {
         expect(actualResult.attempts).toBe(4);
     });
 
-    test('createPointers', () => {
+    test('createPointersForTerminal', () => {
         // TODO: Implement better test
         document.body.innerHTML =
             '<div class="terminal">' +
@@ -138,7 +138,7 @@ describe('Game', () => {
 
         let testGame = new Game();
 
-        let actualResult = testGame.createPointers();
+        let actualResult = testGame.createPointersForTerminal();
 
         expect(actualResult);
     });
@@ -148,28 +148,53 @@ describe('Game', () => {
         let testGame = new Game();
 
         testGame.createDudCode();
-        let actualResult = testGame.terminalData
+        let actualResult = testGame.terminalData;
 
         expect(actualResult);
     });
 
     test('createCurrentPasswords', () => {
-        // TODO: Implement better test
+        let dummy_wordList = [
+            "SAFE",
+            "HACK",
+            "CORE",
+            "TIME",
+            "NONE",
+            "SORT",
+            "ROLL",
+            "HUNT",
+            "BURN",
+            "WIRE",
+            "TOOL",
+            "BACK",
+            "BLUE",
+            "HARD",
+            "FIRE",
+            "TIRE",
+            "MIND"
+        ];
+
         let testGame = new Game();
+        testGame.difficulty = 4;
+        testGame.passwords = function () {
+            return {
+                4: new Dictionary(dummy_wordList)
+            }
+        };
 
         testGame.createCurrentPasswords();
-        let actualResult = testGame.gameData.password
+        let actualResult = testGame.gameData.currentPasswords.wordList;
 
-        expect(actualResult);
+        expect(actualResult.length).toBe(14);
     });
 
-    test('addPasswords', () => {
+    test('addPasswordsToData', () => {
         // TODO: Implement better test
         let testGame = new Game();
-        testGame.createCurrentPasswords()
+        testGame.createCurrentPasswords();
 
-        testGame.addPasswords();
-        let actualResult = testGame.gameData.password
+        testGame.addPasswordsToData();
+        let actualResult = testGame.gameData.password;
 
         expect(actualResult);
     });
@@ -202,7 +227,7 @@ describe('Game', () => {
             '</div>';
 
         let testGame = new Game();
-        testGame.createCurrentPasswords()
+        testGame.createCurrentPasswords();
 
         let actualResult = testGame.addHtml();
 
@@ -234,7 +259,7 @@ describe('Game', () => {
 
         let testGame = new Game();
 
-        let actualResult = testGame.createTerminal();
+        let actualResult = testGame.createPointersForTerminal();
 
         expect(actualResult);
     });
