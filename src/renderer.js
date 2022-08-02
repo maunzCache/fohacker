@@ -34,7 +34,7 @@ class Renderer {
         // TODO: Consider moving back logic to Game (game.js)
         $('.terminal .linenumber').each(function (key, value) {
             for (var i = 0; i < terminalData.rows; i++) {
-                lineNumber = (parseInt(lineNumber, terminalData.rows) + (i * 12)).toString(16).toUpperCase();// Todo allow overflow!
+                lineNumber = (parseInt(lineNumber, terminalData.rows) + (i * 12)).toString(16).toUpperCase();// TODO: allow overflow!
 
                 if (lineNumber.length > 4) {
                     lineNumber = lineNumber.slice(1, 5);
@@ -62,6 +62,38 @@ class Renderer {
 
     static addFOHackerVersionBeforeInfoInput = function () {
         $('.info .input').before('Fallout Hacker<br>Version ' + Game.version + '<br>');
+    }
+
+    static showPasswordInTerminalHeader = function (password) {
+        $('.password').text('(Password=' + password + ')');
+    }
+
+    static addAttemptBlock = function () {
+        $('#attempts').append('<span class="attempt">&nbsp;&nbsp;</span>');
+    }
+
+    static showSkillpointAmount = function (skillpoints) {
+        $('.perklist').append('Skillpoints: <div class="skillpoints">' + skillpoints + '</div><br>');
+    }
+
+    static appendPerkBoxToPerklist = function (classes, key, perk, description) {
+        $('.perklist').append('<div class="' + classes.join(' ') + '" data-id="' + key + '" title="' + perk.description[0] + '">'
+            + '<b>' + perk.title + '</b> (' + perk.level + '/' + perk.maxlevel + ')<br>'
+            + '<span>' + description + '</span>'
+            + '</div>');
+    }
+
+    static addSelectedPasswordBeforeInput = function (selectedPassword) {
+        $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
+    }
+
+    static addAnyHtmlBeforeInput = function (html) {
+        // TODO: Input is not sanitized.
+        $('.info .input').before(html);
+    }
+
+    static emptyPerklist = function () {
+        $('.perklist').empty();
     }
 }
 

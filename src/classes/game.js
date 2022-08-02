@@ -4,6 +4,9 @@ const GameData = require('./gamedata');
 const Perk = require('./perk');
 const Renderer = require('../renderer');
 const TerminalData = require('./terminaldata');
+const Dictionary = require('./dictionary');
+const Dud = require('./dud');
+const DudHelper = require('./dudhelper');
 
 // TODO: Deprecated. Replace with Renderer.
 const $ = require('jquery');
@@ -60,9 +63,6 @@ let perks = [
 
 class Game {
     static version = "0.1 (alpha)" // TODO: Get from package.json
-    static dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
-    static startDuds = "<([{";
-    static endDuds = ">)]}";
 
     constructor() {
         this.gameData = new GameData();
@@ -113,16 +113,16 @@ class Game {
         $('.expbar').css('width', this.gameData.experience / (this.nextLevelExp() / 100));
 
         if (perks[0]["level"] > 0) {
-            $('.password').text('(Password=' + this.gameData.password + ')');
+            Renderer.showPasswordInTerminalHeader(this.gameData.password);
         }
 
         $('#attempts .attempt').detach();
         for (var i = 0; this.gameData.attempts > i; i++) {
-            $('#attempts').append('<span class="attempt">&nbsp;&nbsp;</span>');
+            Renderer.addAttemptBlock();
         }
 
-        $('.perklist').empty();
-        $('.perklist').append('Skillpoints: <div class="skillpoints">' + this.gameData.skillpoints + '</div><br>');
+        Renderer.emptyPerklist();
+        Renderer.showSkillpointAmount(this.gameData.skillpoints);
         $.each(perks, function (key, perk) {
             if (perk.meetsRequirements) {
                 var classes = ['perkdiv'];
@@ -135,10 +135,7 @@ class Game {
                     description = "Maxed out."
                 }
 
-                $('.perklist').append('<div class="' + classes.join(' ') + '" data-id="' + key + '">'
-                    + '<b>' + perk.title + '</b> (' + perk.level + '/' + perk.maxlevel + ')<br>'
-                    + '<span>' + description + '</span>'
-                    + '</div>');
+                Renderer.appendPerkBoxToPerklist(classes, key, perk, description);
             }
         });
         $('.perklist').append();
@@ -169,7 +166,6 @@ class Game {
     createPointers = function () {
         let lineNumber = Math.random().toString(16).slice(2, 6);
 
-        // TODO: What is key, what is value?
         Renderer.createPointersForEachTerminalLinenumber(this.terminalData, lineNumber);
     };
 
@@ -179,10 +175,10 @@ class Game {
             let randomData = "";
             // Iterate per "line"
             for (var j = 0; this.terminalData.dataPerColumn > j; j++) {
-                let randomDudIndex = Math.round(Math.random() * (Game.dudCharacters.length - 1));
-                randomData += Game.dudCharacters[randomDudIndex];
+                let randomDudIndex = Math.round(Math.random() * (DudHelper.dudCharacters.length - 1));
+                randomData += DudHelper.dudCharacters[randomDudIndex];
             }
-            // console.log("Duds [" + i + "]: " + randomData);
+            console.debug("Duds [" + i + "]: " + randomData);
             this.terminalData.code[i] = randomData;
         }
     };
@@ -192,7 +188,7 @@ class Game {
 
         // If dictionary is too small
         let passwordsForDifficulty = this.gameData.passwords()[this.gameData.difficulty];
-        let amountOfPasswords = passwordsForDifficulty.length;
+        let amountOfPasswords = passwordsForDifficulty.wordList.length;
         if (this.gameData.passwordsOnScreen > amountOfPasswords) {
             this.gameData.passwordsOnScreen = amountOfPasswords;
             console.log("Dictionary " + this.getDifficulty() + "(Size: " + this.gameData.difficulty + ") has too few entries (" + amountOfPasswords + ").");
@@ -210,6 +206,7 @@ class Game {
             }
         }
         console.log(currentPasswords);
+        this.gameData.currentPasswords = new Dictionary(currentPasswords)
     };
 
     addPasswords = function () {
@@ -219,43 +216,50 @@ class Game {
         while (tempPasswords.length > 0) {
             let randomPosition = Math.round(Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty)); // Password fits into last line
 
-            if (blockedPositions.indexOf(randomPosition) > -1) {
-                continue; // Get a new random position
-            }
-
             if (randomPosition < 0) {
                 randomPosition = 0;
+            }
+
+            if (blockedPositions.indexOf(randomPosition) > -1) {
+                continue; // Get a new random position
             }
 
             if (randomPosition >= this.terminalData.maxCharacters()) {
                 console.log("Position calculation wrong: " + randomPosition + " of " + this.terminalData.maxCharacters());
             }
 
-            let linePosition = Math.floor(randomPosition / this.terminalData.dataPerColumn);
-            let inLinePosition = randomPosition % this.terminalData.dataPerColumn;
+            let rowNumber = Math.floor(randomPosition / this.terminalData.dataPerColumn);
+            let columnNumber = randomPosition % (this.terminalData.dataPerColumn);
 
             let nextPassword = tempPasswords.shift();
-            if ((linePosition + 1) > (this.terminalData.columns * this.terminalData.rows)) {
-                console.log("Accidentally hit " + (linePosition + 1) + "th row during password insertion.");
+            if ((rowNumber + 1) > (this.terminalData.columns * this.terminalData.rows)) {
+                console.log("Accidentally hit " + (rowNumber + 1) + "th row during password insertion.");
             }
 
             // TODO: Check in test if there is a dependency to another method
             // Code seems to be undefined
-            var code = this.terminalData.code[linePosition];
+            let rowIndex = rowNumber; // TODO: Potential off-by-one error
+            let columnIndex = columnNumber;
+            let code = this.terminalData.code[rowIndex];
 
             if (code) {
-                if ((inLinePosition + this.gameData.difficulty) > this.terminalData.dataPerColumn) { // Password needs more than one row
-                    let difference = this.terminalData.dataPerColumn - inLinePosition;
+                // TODO: Some words are selected but don't exist in code...
+                if ((columnIndex + this.gameData.difficulty) > this.terminalData.dataPerColumn) { // Password needs more than one row
+                    // TODO: Don't support line breaks for now
+                    continue;
+                    // let difference = this.terminalData.dataPerColumn - columnIndex;
 
-                    let overhead = this.gameData.difficulty - difference;
-                    this.terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword.substr(0, difference);
+                    // let overhead = this.gameData.difficulty - difference;
+                    // this.terminalData.code[rowIndex] = code.substr(0, columnIndex) + nextPassword.substr(0, difference);
 
-                    code = this.terminalData.code[linePosition + 1];
-                    this.terminalData.code[linePosition + 1] = nextPassword.substr(difference, overhead) + code.substr(overhead);
+                    // code = this.terminalData.code[rowIndex + 1];
+                    // this.terminalData.code[rowIndex + 1] = nextPassword.substr(difference, overhead) + code.substr(overhead);
+                    // blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
+                } else if ((rowIndex >= 0) && (rowIndex <= (this.terminalData.rows * this.terminalData.rows - 1))) {
+                    this.terminalData.code[rowIndex] = code.substr(0, columnIndex) + nextPassword + code.substr(columnIndex + nextPassword.length);
                     blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
                 } else {
-                    this.terminalData.code[linePosition] = code.substr(0, inLinePosition) + nextPassword + code.substr(inLinePosition + nextPassword.length);
-                    blockedPositions.push(randomPosition, randomPosition - 1, randomPosition + 1, randomPosition - 2, randomPosition + 2, randomPosition - 3, randomPosition + 3, randomPosition - 4, randomPosition + 4);
+                    console.error("Row calculation row for password", rowIndex, nextPassword);
                 }
             } else {
                 console.log("code is not defined. Implement testing.")
@@ -270,20 +274,14 @@ class Game {
         for (var i = 0; this.terminalData.code.length > i; i++) {
             // TODO Code below hits only once. Better RegEx?
             for (var j = this.terminalData.code.length; 0 < j; j--) {
-                let endPosition = Game.endDuds.indexOf(this.terminalData.code[i][j]);
+                let endPosition = DudHelper.endDuds.indexOf(this.terminalData.code[i][j]);
                 if (~endPosition) {
                     let cutString = this.terminalData.code[i].substr(0, endPosition);
-                    let startPosition = cutString.indexOf(Game.startDuds[endPosition]);
+                    let startPosition = cutString.indexOf(DudHelper.startDuds[endPosition]);
                     if (~startPosition) {
-                        duds.push([
-                            {
-                                "dudPos": endPosition,// Position in char string
-                                "startDud": startPosition,
-                                "endDud": j
-                            }
-                        ]);
+                        duds.push([new Dud(endPosition, startPosition, j)]);
                         console.log("Adding duds: " + endPosition + "/" + startPosition + "/" + j);
-                        console.log(this.terminalData.code[i]);
+                        console.debug(this.terminalData.code[i]);
                         // TODO: Only highlights initial duds but not new.
                     }
                 }
@@ -299,6 +297,7 @@ class Game {
     };
 
     addHtml = function () {
+        // TODO: currentPasswords does not exist maybe. Fix in test at least.
         let tmpPasswords = this.gameData.currentPasswords.wordList.slice();
 
         // TODO: Use markup array
@@ -335,7 +334,7 @@ class Game {
 
                         let limitNewLine = (value.length - 1);// Also an index
                         let lineLookAhead = _this.terminalData.code[i].substr(limitOldLine) + _this.terminalData.code[i + 1].substr(0, limitNewLine + 1);
-                        console.log("Lookahead ", value, limitOldLine, limitNewLine, lineLookAhead);
+                        console.debug("Lookahead ", value, limitOldLine, limitNewLine, lineLookAhead);
 
                         // This is the index of the cut and spliced lines
                         let startIndex = lineLookAhead.indexOf(value);
@@ -370,11 +369,11 @@ class Game {
         // TODO: Simulate typing the hovered word
         $('.code .word').on('mouseover', function (event) {
             let passwordHovered = event.target.textContent;
-            console.log("Hovering: " + passwordHovered);
+            console.debug("Hovering: " + passwordHovered);
             $('.info .input').attr('data-content', passwordHovered);
         });
         $('.code .word').on('mouseout', function (event) {
-            console.log("End hover");
+            console.debug("End hover");
             $('.info .input').attr('data-content', '');
         });
         // Todo: Merge code from createTerminal()
@@ -411,7 +410,7 @@ class Game {
         }
 
         // Create settings menubar
-        // Todo move code to ui building code
+        // TODO: move code to ui building code -> renderer
         // Code by http://www.jacklmoore.com/notes/jquery-tabs/
         $('ul.tabs').each(function () {
             // For each set of tabs, we want to keep track of
@@ -469,17 +468,17 @@ class Game {
                 let oldLength = _this.gameData.currentPasswords.wordList.length;
                 _this.createTerminal();
                 _this.addExperience(oldLength);
-                $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
-                $('.info .input').before('<span class="text">Access granted.</span><br>');
+                Renderer.addSelectedPasswordBeforeInput(selectedPassword);
+                Renderer.addAnyHtmlBeforeInput('<span class="text">Access granted.</span><br>');
             } else {
                 _this.gameData.attempts--;
-                $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
-                $('.info .input').before('<span class="likeness">Likeness=' + likeness + '</span><br>');
-                $('.info .input').before('<span class="text">Entry denied.</span><br>');
+                Renderer.addSelectedPasswordBeforeInput(selectedPassword);
+                Renderer.addAnyHtmlBeforeInput('<span class="likeness">Likeness=' + likeness + '</span><br>');
+                Renderer.addAnyHtmlBeforeInput('<span class="text">Entry denied.</span><br>');
                 if (_this.gameData.attempts == 0) {
                     _this.createTerminal();
-                    $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
-                    $('.info .input').before('<span class="text">Terminal locked.</span><br>');
+                    Renderer.addSelectedPasswordBeforeInput(selectedPassword);
+                    Renderer.addAnyHtmlBeforeInput('<span class="text">Terminal locked.</span><br>');
                 }
             }
 
@@ -487,7 +486,8 @@ class Game {
         });
 
         // Break special
-        $('.linebreak').on('mouseenter', function () {
+        let linebreak = $('.linebreak');
+        linebreak.on('mouseenter', function () {
             let dataWord = $(this).data("word");
             let siblings = $('[data-word="' + dataWord + '"]');
             $(siblings).each(function () {
@@ -495,17 +495,18 @@ class Game {
                 $(this).css("color", "#0B1907");
             });
         }, function () {
-            $('.linebreak').css("background-color", "#0B1907");
-            $('.linebreak').css("color", "#82FA58");
+            linebreak.css("background-color", "#0B1907");
+            linebreak.css("color", "#82FA58");
         });
 
-        // Todo update data word :(
-        $('.pagebreak').on('mouseenter', function () {
-            $('.pagebreak').css("background-color", "#82FA58");
-            $('.pagebreak').css("color", "#0B1907");
+        // TODO: update data word :(
+        let pagebreak = $('.pagebreak');
+        pagebreak.on('mouseenter', function () {
+            pagebreak.css("background-color", "#82FA58");
+            pagebreak.css("color", "#0B1907");
         }, function () {
-            $('.pagebreak').css("background-color", "#0B1907");
-            $('.pagebreak').css("color", "#82FA58");
+            pagebreak.css("background-color", "#0B1907");
+            pagebreak.css("color", "#82FA58");
         });
 
         this.updateUI();

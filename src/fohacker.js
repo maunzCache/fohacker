@@ -23,6 +23,7 @@ const Renderer = require('./renderer');
   window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
     game.createTerminal();
+    // TODO: Failes to render the version even if static value
     Renderer.addFOHackerVersionBeforeInfoInput();
   });
 })();

@@ -202,6 +202,7 @@ describe('Game', () => {
             '</div>';
 
         let testGame = new Game();
+        testGame.createCurrentPasswords()
 
         let actualResult = testGame.addHtml();
 
