@@ -9,13 +9,13 @@ class TerminalData {
         this.markup = [];
     }
 
-    maxCharacters = function () {
+    maxCharacters() {
         return this.dataPerColumn * this.rowsPerColumn * this.columns;
-    };
+    }
 
-    codeString = function () {
+    codeString() {
         return this.code.join("");
-    };
-};
+    }
+}
 
-module.exports = TerminalData;
+export default TerminalData;

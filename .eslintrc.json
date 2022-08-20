@@ -1,0 +1,27 @@
+{
+    "root": true,
+    "env": {
+        "browser": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "parser": "esprima",
+    "parserOptions": {
+        "ecmaVersion": 2021,
+        "sourceType": "module"
+    },
+    "plugins": [],
+    "rules": {},
+    "ignorePatterns": [
+        "tests/**/*",
+        "dist/**/*"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "src/**/*.js"
+            ]
+        }
+    ]
+}

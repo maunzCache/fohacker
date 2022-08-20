@@ -9,4 +9,4 @@ class Dud {
     }
 }
 
-module.exports = Dud;
+export default Dud;

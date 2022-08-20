@@ -1,36 +1,36 @@
 'use strict';
 
-const $ = require('jquery');
+import $ from 'jquery';
 
-const Game = require('./classes/game');
+import Game from './classes/game.js';
 
 class Renderer {
     // TODO: Implement testing
-    static addLevelUpBeforeInfoInput = function () {
+    static addLevelUpBeforeInfoInput() {
         $('.info .input').before('<span class="info">Level Up</span><br>');
-    };
+    }
 
-    static addExpBeforeInfoInput = function (addExp) {
+    static addExpBeforeInfoInput(addExp) {
         $('.info .input').before('<span class="info">EXP +' + addExp + '</span><br>');
-    };
+    }
 
-    static emptyTerminalLinenumber = function () {
+    static emptyTerminalLinenumber() {
         $('.terminal .linenumber').empty();
-    };
+    }
 
-    static emptyTerminalCode = function () {
+    static emptyTerminalCode() {
         $('.terminal .code').empty();
-    };
+    }
 
-    static emptyInfo = function () {
+    static emptyInfo() {
         $('.info').empty();
-    };
+    }
 
-    static appendInputSpanToInfo = function () {
+    static appendInputSpanToInfo() {
         $('.info').append('<span class="input">&nbsp</span>');
-    };
+    }
 
-    static createPointersForEachTerminalLinenumber = function (terminalData, lineNumber) {
+    static createPointersForEachTerminalLinenumber(terminalData, lineNumber) {
         // TODO: Consider moving back logic to Game (game.js)
         $('.terminal .linenumber').each(function (key, value) {
             for (var i = 0; i < terminalData.rowsPerColumn; i++) {
@@ -50,9 +50,9 @@ class Renderer {
                 }
             }
         });
-    };
+    }
 
-    static appendLineNumberSpan = function (value, lineNumber, isLastLine) {
+    static appendLineNumberSpan(value, lineNumber, isLastLine) {
         if (isLastLine) {
             $(value).append("<span>0x" + lineNumber + "</span>");
         } else {
@@ -60,41 +60,41 @@ class Renderer {
         }
     }
 
-    static addFOHackerVersionBeforeInfoInput = function () {
+    static addFOHackerVersionBeforeInfoInput() {
         $('.info .input').before('Fallout Hacker<br>Version ' + Game.version + '<br>');
     }
 
-    static showPasswordInTerminalHeader = function (password) {
+    static showPasswordInTerminalHeader(password) {
         $('.password').text('(Password=' + password + ')');
     }
 
-    static addAttemptBlock = function () {
+    static addAttemptBlock() {
         $('#attempts').append('<span class="attempt">&nbsp;&nbsp;</span>');
     }
 
-    static showSkillpointAmount = function (skillpoints) {
+    static showSkillpointAmount(skillpoints) {
         $('.perklist').append('Skillpoints: <div class="skillpoints">' + skillpoints + '</div><br>');
     }
 
-    static appendPerkBoxToPerklist = function (classes, key, perk, description) {
+    static appendPerkBoxToPerklist(classes, key, perk, description) {
         $('.perklist').append('<div class="' + classes.join(' ') + '" data-id="' + key + '" title="' + perk.description[0] + '">'
             + '<b>' + perk.title + '</b> (' + perk.level + '/' + perk.maxlevel + ')<br>'
             + '<span>' + description + '</span>'
             + '</div>');
     }
 
-    static addSelectedPasswordBeforeInput = function (selectedPassword) {
+    static addSelectedPasswordBeforeInput(selectedPassword) {
         $('.info .input').before('<span class="try">' + selectedPassword + '</span><br>');
     }
 
-    static addAnyHtmlBeforeInput = function (html) {
+    static addAnyHtmlBeforeInput(html) {
         // TODO: Input is not sanitized.
         $('.info .input').before(html);
     }
 
-    static emptyPerklist = function () {
+    static emptyPerklist() {
         $('.perklist').empty();
     }
 }
 
-module.exports = Renderer;
+export default Renderer;

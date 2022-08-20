@@ -1,6 +1,6 @@
 'use strict';
 
-const Dictionary = require('./dictionary');
+import Dictionary from './dictionary.js';
 
 // TODO: Implement loading from assets folder as JSON
 var passwords = function () {
@@ -53,7 +53,7 @@ class GameData {
         this.caps = 0;
         this.health = 100;
         this.maxhealth = 100;
-    };
-};
+    }
+}
 
-module.exports = GameData;
+export default GameData;

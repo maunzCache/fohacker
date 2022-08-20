@@ -1,15 +1,15 @@
 'use strict';
 
-const GameData = require('./gamedata');
-const Perk = require('./perk');
-const Renderer = require('../renderer');
-const TerminalData = require('./terminaldata');
-const Dictionary = require('./dictionary');
-const Dud = require('./dud');
-const DudHelper = require('./dudhelper');
+import Renderer from '../renderer.js';
+import GameData from './gamedata.js';
+import Perk from './perk.js';
+import TerminalData from './terminaldata.js';
+import Dictionary from './dictionary.js';
+import Dud from './dud.js';
+import DudHelper from './dudhelper.js';
 
 // TODO: Deprecated. Replace with Renderer.
-const $ = require('jquery');
+import $ from 'jquery';
 
 // TODO: Implement loading from assets folder as JSON
 let perks = [
@@ -62,18 +62,16 @@ let perks = [
 ];
 
 class Game {
-    static version = "0.1 (alpha)" // TODO: Get from package.json
-
     constructor() {
         this.gameData = new GameData();
         this.terminalData = new TerminalData();
     }
 
-    nextLevelExp = function () {
+    nextLevelExp() {
         return Math.round(Math.exp((this.gameData.level + 1) * 0.45) + Math.exp(this.gameData.level * 0.45) * 6);
-    };
+    }
 
-    levelUp = function () {
+    levelUp() {
         let nextExp = this.nextLevelExp();
 
         while (this.gameData.experience > nextExp) {
@@ -86,16 +84,16 @@ class Game {
                 this.gameData.experience = Math.abs(possibleOverhead);
             }
         }
-    };
+    }
 
-    addExperience = function (words) {
+    addExperience(words) {
         let addExp = Math.round((words + 1) * this.gameData.difficulty * 0.35);
         this.gameData.experience += addExp;
         Renderer.addExpBeforeInfoInput(addExp);
         this.levelUp();
-    };
+    }
 
-    getDifficulty = function () {
+    getDifficulty() {
         if (this.gameData.difficulty >= 4 && this.gameData.difficulty <= 5) {
             return "Easy";
         } else if (this.gameData.difficulty >= 6 && this.gameData.difficulty <= 8) {
@@ -105,9 +103,9 @@ class Game {
         } else if (this.gameData.difficulty >= 11 && this.gameData.difficulty <= 12) {
             return "Master";
         }
-    };
+    }
 
-    updateUI = function () {
+    updateUI() {
         $('.infobar .difficulty').text(this.getDifficulty());
         $('.infobar .level').text(this.gameData.level);
         $('.expbar').css('width', this.gameData.experience / (this.nextLevelExp() / 100));
@@ -151,9 +149,9 @@ class Game {
                 }
             }
         });
-    };
+    }
 
-    clearOld = function () {
+    clearOld() {
         // TODO: This can obviously be refactored.
         Renderer.emptyTerminalLinenumber();
         Renderer.emptyTerminalCode();
@@ -161,14 +159,14 @@ class Game {
         this.gameData.currentPasswords = this.gameData.passwords()[this.gameData.difficulty];
         Renderer.emptyInfo();
         Renderer.appendInputSpanToInfo();
-    };
+    }
 
-    createPointersForTerminal = function () {
+    createPointersForTerminal() {
         let lineNumber = Math.random().toString(16).slice(2, 6);
         Renderer.createPointersForEachTerminalLinenumber(this.terminalData, lineNumber);
-    };
+    }
 
-    createDudCode = function () {
+    createDudCode() {
         // TODO: Replace with code that ensures duds by using a certain skill
         // Iterate for each character
         for (var dataIndex = 0; (this.terminalData.columns * this.terminalData.rowsPerColumn) > dataIndex; dataIndex++) {
@@ -181,9 +179,9 @@ class Game {
             console.debug("Duds [" + dataIndex + "]: " + randomData);
             this.terminalData.code[dataIndex] = randomData;
         }
-    };
+    }
 
-    createCurrentPasswords = function () {
+    createCurrentPasswords() {
         // TODO: Replace with code that ensures passwords by using a certain skill
         let currentPasswords = [];
 
@@ -208,9 +206,9 @@ class Game {
         }
         console.log(currentPasswords);
         this.gameData.currentPasswords = new Dictionary(currentPasswords)
-    };
+    }
 
-    addPasswordsToData = function () {
+    addPasswordsToData() {
         let tempPasswords = this.gameData.currentPasswords.wordList.slice();
         let blockedPositions = [];
 
@@ -249,9 +247,9 @@ class Game {
                 console.log("code is not defined. Implement testing.")
             }
         }
-    };
+    }
 
-    getRandomIndexForPasswordStart = function (blockedPositions) {
+    getRandomIndexForPasswordStart(blockedPositions) {
         let randomPosition = Math.round(Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty)); // Password fits into last line
 
         if (randomPosition < 0) {
@@ -267,9 +265,9 @@ class Game {
         }
 
         return randomPosition;
-    };
+    }
 
-    findDuds = function () {
+    findDuds() {
         console.log("Terminal has size: " + this.terminalData.code.length);
         // Get the end duds first
         let duds = [];
@@ -293,13 +291,13 @@ class Game {
             console.log("Final list of duds: ");
             console.log(duds);
         }
-    };
+    }
 
-    createMarkup = function () {
+    createMarkup() {
         // TODO: Maybe no longer required
-    };
+    }
 
-    addHtml = function () {
+    addHtml() {
         // TODO: currentPasswords does not exist maybe. Fix in test at least.
         let tmpPasswords = this.gameData.currentPasswords.wordList.slice();
 
@@ -321,7 +319,7 @@ class Game {
 
             let replacedPassword = "";
             let _this = this; // TODO: Workaround because of scope
-            tmpPasswords.forEach(function (value, key, array) {
+            tmpPasswords.forEach(function (value) {
                 // Finds all single line passwords
                 // TODO: Fails for words including other words
                 let tempNewLineValue = lineValue.replace(value, '<span class="word" data-word="' + value + '">' + value + '</span>');
@@ -340,8 +338,8 @@ class Game {
                         console.debug("Lookahead ", value, limitOldLine, limitNewLine, lineLookAhead);
 
                         // This is the index of the cut and spliced lines
-                        let startIndex = lineLookAhead.indexOf(value);
-                        let endIndex = startIndex + value.length;
+                        // let startIndex = lineLookAhead.indexOf(value);
+                        // let endIndex = startIndex + value.length;
 
                         // NOTE: At this point the whole stuff will fail as the next line will override the markup of this nice linebreak stuff.
                         // I'd rather not implement linebreaking for now and just ensure limits.
@@ -361,13 +359,13 @@ class Game {
             // Note: If rendered as html some duds will break stuff.
             $('#span' + rowIndex).html(lineValue);
 
-            tmpPasswords = tmpPasswords.filter(function (value, key, array) {
+            tmpPasswords = tmpPasswords.filter(function (value) {
                 return value !== replacedPassword;
             });
         }
-    };
+    }
 
-    addScript = function () {
+    addScript() {
         // TODO: Move to renderer
         // TODO: Simulate typing the hovered word
         $('.code .word').on('mouseover', function (event) {
@@ -375,14 +373,14 @@ class Game {
             console.debug("Hovering: " + passwordHovered);
             $('.info .input').attr('data-content', passwordHovered);
         });
-        $('.code .word').on('mouseout', function (event) {
+        $('.code .word').on('mouseout', function () {
             console.debug("End hover");
             $('.info .input').attr('data-content', '');
         });
         // Todo: Merge code from createTerminal()
-    };
+    }
 
-    createTerminal = function () {
+    createTerminal() {
         let _this = this; // TODO: Workaround for scope
         this.clearOld();
 
@@ -513,7 +511,8 @@ class Game {
         });
 
         this.updateUI();
-    };
-};
+    }
+}
+Game.version = "0.1 (alpha)"; // TODO: Make static. Get from package.json
 
-module.exports = Game;
+export default Game;

@@ -2,17 +2,16 @@
 
 // TODO: Refactor name due to singular-plural conflict
 class DudHelper {
-    static dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
-    static startDuds = "<([{";
-    static endDuds = ">)]}";
-
     constructor() {
         this.duds = [];
     }
 
-    addDud = function(dudToAdd) {
+    addDud(dudToAdd) {
         this.duds.push(dudToAdd);
     }
 }
+DudHelper.dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/|_";
+DudHelper.startDuds = "<([{";
+DudHelper.endDuds = ">)]}";
 
-module.exports = DudHelper;
+export default DudHelper;
