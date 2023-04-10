@@ -1,6 +1,6 @@
 'use strict';
 
-const Game = require('../../src/classes/game.js');
+import Game from '../../src/classes/game.js';
 
 describe('Game', () => {
     test('constructor', () => {

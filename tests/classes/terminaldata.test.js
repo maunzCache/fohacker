@@ -1,6 +1,6 @@
 'use strict';
 
-const TerminalData = require('../../src/classes/terminaldata');
+import TerminalData from '../../src/classes/terminaldata';
 
 describe('TerminalData', () => {
     test('constructor', () => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const Dictionary = require('../../src/classes/dictionary');
+import Dictionary from '../../src/classes/dictionary';
 
 describe('Dictionary', () => {
     test('constructor', () => {

@@ -1,6 +1,6 @@
 'use strict';
 
-const Perk = require('../../src/classes/perk');
+import Perk from '../../src/classes/perk';
 
 describe('Perk', () => {
     test('constructor', () => {

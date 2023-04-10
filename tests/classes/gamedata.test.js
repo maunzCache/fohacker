@@ -1,6 +1,6 @@
 'use strict';
 
-const GameData = require('../../src/classes/gamedata');
+import GameData from "../../src/classes/gamedata";
 
 describe('GameData', () => {
     test('constructor', () => {
