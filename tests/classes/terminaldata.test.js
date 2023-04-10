@@ -1,6 +1,6 @@
 'use strict';
 
-import TerminalData from '../../src/classes/terminaldata';
+import TerminalData from '../../src/classes/terminaldata.js';
 
 describe('TerminalData', () => {
     test('constructor', () => {

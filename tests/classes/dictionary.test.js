@@ -1,6 +1,6 @@
 'use strict';
 
-import Dictionary from '../../src/classes/dictionary';
+import Dictionary from '../../src/classes/dictionary.js';
 
 describe('Dictionary', () => {
     test('constructor', () => {

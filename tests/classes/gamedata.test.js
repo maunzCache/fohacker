@@ -1,6 +1,6 @@
 'use strict';
 
-import GameData from "../../src/classes/gamedata";
+import GameData from '../../src/classes/gamedata.js';
 
 describe('GameData', () => {
     test('constructor', () => {

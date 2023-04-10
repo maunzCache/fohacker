@@ -1,5 +1,7 @@
 'use strict';
 
+import ListNode from './listnode.js';
+
 class LinkedList {
     constructor() {
         // Note: If we don't want null, the constructor can create the first node.
@@ -73,15 +75,7 @@ class LinkedList {
     }
 }
 
-class ListNode {
-    constructor(type, value) {
-        this.type = type; // TODO: could implement it via class typing
-        this.value = value; // TODO: this should be string. rename to LinkedListStringNode or something else
-        this.child = null;
-    }
-}
-
-export default { LinkedList, ListNode };
+export default LinkedList;
 
 let getRandomIntInclusive = function (min, max) {
     // See: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Math/random

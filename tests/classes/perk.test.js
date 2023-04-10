@@ -1,6 +1,6 @@
 'use strict';
 
-import Perk from '../../src/classes/perk';
+import Perk from '../../src/classes/perk.js';
 
 describe('Perk', () => {
     test('constructor', () => {
