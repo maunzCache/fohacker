@@ -28,16 +28,16 @@
         "linux"
     ],
     "devDependencies": {
-        "@types/jest": "^29.5.0",
-        "eslint": "^8.38.0",
-        "jest": "29.5.0",
-        "jest-environment-jsdom": "29.5.0",
-        "jsdom": "21.1.1",
-        "webpack": "5.78.0",
-        "webpack-cli": "5.0.1"
+        "@types/jest": "^29.5.12",
+        "eslint": "^8.57.0",
+        "jest": "29.7.0",
+        "jest-environment-jsdom": "29.7.0",
+        "jsdom": "24.0.0",
+        "webpack": "5.90.3",
+        "webpack-cli": "5.1.4"
     },
     "dependencies": {
-        "jquery": "3.6.4"
+        "jquery": "3.7.1"
     },
     "jest": {
         "testEnvironment": "jsdom",
