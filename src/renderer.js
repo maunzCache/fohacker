@@ -32,8 +32,8 @@ class Renderer {
 
     static createPointersForEachTerminalLinenumber(terminalData, lineNumber) {
         // TODO: Consider moving back logic to Game (game.js)
-        $('.terminal .linenumber').each(function (key, value) {
-            for (var i = 0; i < terminalData.rowsPerColumn; i++) {
+        $('.terminal .linenumber').each(function (_key, value) {
+            for (let i = 0; i < terminalData.rowsPerColumn; i++) {
                 lineNumber = (parseInt(lineNumber, terminalData.rowsPerColumn) + (i * 12)).toString(16).toUpperCase();// TODO: allow overflow!
 
                 if (lineNumber.length > 4) {

@@ -1,11 +1,15 @@
-'use strict';
+"use strict";
 
-import LinkedList from '../../src/classes/linkedlist.js';
+import { assertEquals } from "std/assert/mod.ts";
 
-describe('LinkedList', () => {
-    test('constructor', () => {
-        let actualResult = new LinkedList();
+import LinkedList from "../../src/classes/linkedlist.js";
 
-        expect(actualResult);
+Deno.test("jest", () => {
+  describe("LinkedList", () => {
+    test("constructor", () => {
+      const actualResult = new LinkedList();
+
+      expect(actualResult);
     });
+  });
 });

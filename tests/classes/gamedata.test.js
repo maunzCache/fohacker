@@ -1,11 +1,15 @@
-'use strict';
+"use strict";
 
-import GameData from '../../src/classes/gamedata.js';
+import { assertEquals } from "std/assert/mod.ts";
 
-describe('GameData', () => {
-    test('constructor', () => {
-        let actualResult = new GameData();
+import GameData from "../../src/classes/gamedata.js";
 
-        expect(actualResult);
+Deno.test("jest", () => {
+  describe("GameData", () => {
+    test("constructor", () => {
+      const actualResult = new GameData();
+
+      expect(actualResult);
     });
+  });
 });

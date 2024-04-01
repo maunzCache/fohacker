@@ -1,33 +1,37 @@
-'use strict';
+"use strict";
 
-import TerminalData from '../../src/classes/terminaldata.js';
+import { assertEquals } from "std/assert/mod.ts";
 
-describe('TerminalData', () => {
-    test('constructor', () => {
-        let actualResult = new TerminalData();
+import TerminalData from "../../src/classes/terminaldata.js";
 
-        expect(actualResult);
+Deno.test("jest", () => {
+  describe("TerminalData", () => {
+    test("constructor", () => {
+      const actualResult = new TerminalData();
+
+      expect(actualResult);
     });
 
-    test('maxCharacters', () => {
-        let testTerminalData = new TerminalData();
+    test("maxCharacters", () => {
+      const testTerminalData = new TerminalData();
 
-        let actualResult = testTerminalData.maxCharacters();
+      const actualResult = testTerminalData.maxCharacters();
 
-        expect(actualResult).toBe(384);
+      expect(actualResult).toBe(384);
     });
 
-    test('codeString', () => {
-        let dummyCode = [
-            "One line",
-            "Another line"
-        ]
+    test("codeString", () => {
+      const dummyCode = [
+        "One line",
+        "Another line",
+      ];
 
-        let testTerminalData = new TerminalData();
-        testTerminalData.code = dummyCode
+      const testTerminalData = new TerminalData();
+      testTerminalData.code = dummyCode;
 
-        let actualResult = testTerminalData.codeString();
+      const actualResult = testTerminalData.codeString();
 
-        expect(actualResult).toBe("One lineAnother line");
+      expect(actualResult).toBe("One lineAnother line");
     });
+  });
 });

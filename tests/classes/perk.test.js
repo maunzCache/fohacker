@@ -1,19 +1,28 @@
-'use strict';
+"use strict";
 
-import Perk from '../../src/classes/perk.js';
+import { assertEquals } from "std/assert/mod.ts";
 
-describe('Perk', () => {
-    test('constructor', () => {
-        let testTitle = "my-title";
-        let testDescription = [
-            "my-level-1-description",
-            "my-level-2-description",
-        ];
-        let testLevel = 0;
-        let testMaxLevel = 0;
+import Perk from "../../src/classes/perk.js";
 
-        let actualResult = new Perk(testTitle, testDescription, testLevel, testMaxLevel);
+Deno.test("jest", () => {
+  describe("Perk", () => {
+    test("constructor", () => {
+      const testTitle = "my-title";
+      const testDescription = [
+        "my-level-1-description",
+        "my-level-2-description",
+      ];
+      const testLevel = 0;
+      const testMaxLevel = 0;
 
-        expect(actualResult);
+      const actualResult = new Perk(
+        testTitle,
+        testDescription,
+        testLevel,
+        testMaxLevel,
+      );
+
+      expect(actualResult);
     });
+  });
 });

@@ -1,266 +1,266 @@
-'use strict';
+"use strict";
 
-import Game from '../../src/classes/game.js';
+import { DOMParser } from "deno_dom/deno-dom-wasm.ts";
+import { assert, assertEquals } from "std/assert/mod.ts";
 
-describe('Game', () => {
-    test('constructor', () => {
-        let actualResult = new Game();
+import Game from "../../src/classes/game.js";
 
-        expect(actualResult);
-    });
+Deno.test("Game constructor", () => {
+  const actualResult = new Game();
 
-    test('nextLevelExp', () => {
-        let testGame = new Game();
+  assert(actualResult);
+});
 
-        var actualResult = testGame.nextLevelExp();
+Deno.test("Game nextLevelExp", () => {
+  const testGame = new Game();
 
-        // From level 0 to 1
-        expect(actualResult).toBe(12);
+  let actualResult = testGame.nextLevelExp();
 
-        // From level 9 to 10
-        testGame.gameData.level = 9;
-        actualResult = testGame.nextLevelExp();
-        expect(actualResult).toBe(434);
+  // From level 0 to 1
+  assertEquals(actualResult, 12);
 
-        // From level 19 to 20
-        testGame.gameData.level = 19;
-        actualResult = testGame.nextLevelExp();
-        expect(actualResult).toBe(39104);
-    });
+  // From level 9 to 10
+  testGame.gameData.level = 9;
+  actualResult = testGame.nextLevelExp();
+  assertEquals(actualResult, 434);
 
-    test('levelUp', () => {
-        document.body.innerHTML =
-            '<div class="info">' +
-            '    <div class="input"></div>' +
-            '</div>';
+  // From level 19 to 20
+  testGame.gameData.level = 19;
+  actualResult = testGame.nextLevelExp();
+  assertEquals(actualResult, 39104);
+});
 
-        let testGame = new Game();
+Deno.test("Game levelUp", () => {
+  const window = Window;
+  window.document = new DOMParser().parseFromString(
+    `<!DOCTYPE html>
+    <html lang="en">
+      <body></body>
+    </html>`,
+    "text/html",
+  );
+  window.document.body.innerHTML = '<div class="info">' +
+    '    <div class="input"></div>' +
+    "</div>";
 
-        testGame.levelUp();
-        var actualResult = testGame.gameData.level;
+  const testGame = new Game();
 
-        // Start at level 1
-        expect(actualResult).toBe(1);
+  testGame.levelUp();
+  let actualResult = testGame.gameData.level;
 
-        // Level up to level 2
-        testGame.gameData.experience = 13;
-        testGame.levelUp();
-        actualResult = testGame.gameData.level;
-        expect(actualResult).toBe(2);
-    });
+  // Start at level 1
+  assertEquals(actualResult, 1);
 
-    test('addExperience', () => {
-        document.body.innerHTML =
-            '<div class="info">' +
-            '    <div class="input"></div>' +
-            '</div>';
+  // Level up to level 2
+  testGame.gameData.experience = 13;
+  testGame.levelUp();
+  actualResult = testGame.gameData.level;
+  assertEquals(actualResult, 2);
+});
 
-        // TODO: What does that argument mean? Words is bad!
-        let dummyWords = 10;
+Deno.test("Game addExperience", () => {
+  document.body.innerHTML = '<div class="info">' +
+    '    <div class="input"></div>' +
+    "</div>";
 
-        let testGame = new Game();
+  // TODO: What does that argument mean? Words is bad!
+  const dummyWords = 10;
 
-        testGame.addExperience(dummyWords);
-        var actualResult = testGame.gameData.experience;
+  const testGame = new Game();
 
-        expect(actualResult).toBe(3);
-    });
+  testGame.addExperience(dummyWords);
+  const actualResult = testGame.gameData.experience;
 
-    describe('getDifficulty', () => {
-        test('Easy', () => {
-            let testGame = new Game();
-            testGame.gameData.difficulty = Math.random() * (5 - 4) + 4;
+  assertEquals(actualResult, 3);
+});
 
-            var actualResult = testGame.getDifficulty();
+Deno.test("Game getDifficulty Easy", () => {
+  const testGame = new Game();
+  testGame.gameData.difficulty = Math.random() * (5 - 4) + 4;
 
-            expect(actualResult).toBe('Easy');
-        });
+  const actualResult = testGame.getDifficulty();
 
-        test('Advanced', () => {
-            let testGame = new Game();
-            testGame.gameData.difficulty = Math.random() * (8 - 6) + 6;
+  assertEquals(actualResult, "Easy");
+});
 
-            var actualResult = testGame.getDifficulty();
+Deno.test("Game getDifficulty Advanced", () => {
+  const testGame = new Game();
+  testGame.gameData.difficulty = Math.random() * (8 - 6) + 6;
 
-            expect(actualResult).toBe('Advanced');
-        });
+  const actualResult = testGame.getDifficulty();
 
-        test('Expert', () => {
-            let testGame = new Game();
-            testGame.gameData.difficulty = Math.random() * (10 - 9) + 9;
+  assertEquals(actualResult, "Advanced");
+});
 
-            var actualResult = testGame.getDifficulty();
+Deno.test("Game getDifficulty Expert", () => {
+  const testGame = new Game();
+  testGame.gameData.difficulty = Math.random() * (10 - 9) + 9;
 
-            expect(actualResult).toBe('Expert');
-        });
+  const actualResult = testGame.getDifficulty();
 
-        test('Master', () => {
-            let testGame = new Game();
-            testGame.gameData.difficulty = Math.random() * (12 - 11) + 11;
+  assertEquals(actualResult, "Expert");
+});
+
+Deno.test("Game getDifficulty Master", () => {
+  const testGame = new Game();
+  testGame.gameData.difficulty = Math.random() * (12 - 11) + 11;
+
+  const actualResult = testGame.getDifficulty();
+
+  assertEquals(actualResult, "Master");
+});
+
+Deno.test("Game updateUI", () => {
+  // TODO: Implement better tests
+  const testGame = new Game();
+
+  const actualResult = testGame.updateUI();
+
+  assert(actualResult);
+});
+
+Deno.test("Game clearOld", () => {
+  document.body.innerHTML = '<div class="terminal">' +
+    '    <div class="linenumber"></div>' +
+    '    <div class="code"></div>' +
+    "</div>" +
+    '<div class="info"></div>';
+
+  const testGame = new Game();
+
+  testGame.clearOld();
+  const actualResult = testGame.gameData;
+
+  assertEquals(actualResult.attempts, 4);
+});
+
+Deno.test("Game createPointersForTerminal", () => {
+  // TODO: Implement better test
+  document.body.innerHTML = '<div class="terminal">' +
+    '    <div class="linenumber"></div>' +
+    "</div>";
+
+  const testGame = new Game();
+
+  const actualResult = testGame.createPointersForTerminal();
+
+  assert(actualResult);
+});
 
-            var actualResult = testGame.getDifficulty();
-
-            expect(actualResult).toBe('Master');
-        });
-    });
-
-    test('updateUI', () => {
-        // TODO: Implement better test
-        let testGame = new Game();
-
-        let actualResult = testGame.updateUI();
-
-        expect(actualResult);
-    });
-
-    test('clearOld', () => {
-        document.body.innerHTML =
-            '<div class="terminal">' +
-            '    <div class="linenumber"></div>' +
-            '    <div class="code"></div>' +
-            '</div>' +
-            '<div class="info"></div>';
-
-        let testGame = new Game();
-
-        testGame.clearOld();
-        let actualResult = testGame.gameData;
-
-        expect(actualResult.attempts).toBe(4);
-    });
-
-    test('createPointersForTerminal', () => {
-        // TODO: Implement better test
-        document.body.innerHTML =
-            '<div class="terminal">' +
-            '    <div class="linenumber"></div>' +
-            '</div>';
-
-        let testGame = new Game();
-
-        let actualResult = testGame.createPointersForTerminal();
-
-        expect(actualResult);
-    });
-
-    test('createDudCode', () => {
-        // TODO: Implement better test
-        let testGame = new Game();
-
-        testGame.createDudCode();
-        let actualResult = testGame.terminalData;
-
-        expect(actualResult);
-    });
-
-    test('createCurrentPasswords', () => {
-        let dummy_wordList = [
-            "SAFE",
-            "HACK",
-            "CORE",
-            "TIME",
-            "NONE",
-            "SORT",
-            "ROLL",
-            "HUNT",
-            "BURN",
-            "WIRE",
-            "TOOL",
-            "BACK",
-            "BLUE",
-            "HARD",
-            "FIRE",
-            "TIRE",
-            "MIND"
-        ];
-
-        let testGame = new Game();
-        testGame.difficulty = 4;
-        testGame.passwords = function () {
-            return {
-                4: new Dictionary(dummy_wordList)
-            }
-        };
-
-        testGame.createCurrentPasswords();
-        let actualResult = testGame.gameData.currentPasswords.wordList;
-
-        expect(actualResult.length).toBe(14);
-    });
-
-    test('addPasswordsToData', () => {
-        // TODO: Implement better test
-        let testGame = new Game();
-        testGame.createCurrentPasswords();
-
-        testGame.addPasswordsToData();
-        let actualResult = testGame.gameData.password;
-
-        expect(actualResult);
-    });
-
-    test('findDuds', () => {
-        // TODO: Implement better test
-        let testGame = new Game();
-        testGame.createDudCode()
-
-        let actualResult = testGame.findDuds();
-
-        expect(actualResult);
-    });
-
-    test('createMarkup', () => {
-        // TODO: Implement better test and well actual function
-        let testGame = new Game();
-
-        let actualResult = testGame.createMarkup();
-
-        expect(actualResult);
-    });
-
-    test('addHtml', () => {
-        // TODO: Implement better test and well actual function
-        document.body.innerHTML =
-            '<div class="terminal">' +
-            '    <div class="left code"></div>' +
-            '    <div class="right code"></div>' +
-            '</div>';
-
-        let testGame = new Game();
-        testGame.createCurrentPasswords();
-
-        let actualResult = testGame.addHtml();
-
-        expect(actualResult);
-    });
-
-    test('addScript', () => {
-        // TODO: Implement better test and well actual function
-        document.body.innerHTML =
-            '<div class="terminal">' +
-            '    <div class="left code"></div>' +
-            '    <div class="right code"></div>' +
-            '</div>';
-
-        let testGame = new Game();
-
-        let actualResult = testGame.addScript();
-
-        expect(actualResult);
-    });
-
-    test('createTerminal', () => {
-        // TODO: Implement better test and well actual function
-        document.body.innerHTML =
-            '<div class="terminal">' +
-            '    <div class="left code"></div>' +
-            '    <div class="right code"></div>' +
-            '</div>';
-
-        let testGame = new Game();
-
-        let actualResult = testGame.createPointersForTerminal();
-
-        expect(actualResult);
-    });
+Deno.test("Game createDudCode", () => {
+  // TODO: Implement better test
+  const testGame = new Game();
+
+  testGame.createDudCode();
+  const actualResult = testGame.terminalData;
+
+  assert(actualResult);
+});
+
+Deno.test("Game createCurrentPasswords", () => {
+  const dummy_wordList = [
+    "SAFE",
+    "HACK",
+    "CORE",
+    "TIME",
+    "NONE",
+    "SORT",
+    "ROLL",
+    "HUNT",
+    "BURN",
+    "WIRE",
+    "TOOL",
+    "BACK",
+    "BLUE",
+    "HARD",
+    "FIRE",
+    "TIRE",
+    "MIND",
+  ];
+
+  const testGame = new Game();
+  testGame.difficulty = 4;
+  testGame.passwords = function () {
+    return {
+      4: new Dictionary(dummy_wordList),
+    };
+  };
+
+  testGame.createCurrentPasswords();
+  const actualResult = testGame.gameData.currentPasswords.wordList;
+
+  assertEquals(actualResult.length, 14);
+});
+
+Deno.test("Game addPasswordsToData", () => {
+  // TODO: Implement better test
+  const testGame = new Game();
+  testGame.createCurrentPasswords();
+
+  testGame.addPasswordsToData();
+  const actualResult = testGame.gameData.password;
+
+  assert(actualResult);
+});
+
+Deno.test("Game findDuds", () => {
+  // TODO: Implement better test
+  const testGame = new Game();
+  testGame.createDudCode();
+
+  const actualResult = testGame.findDuds();
+
+  assert(actualResult);
+});
+
+Deno.test("Game createMarkup", () => {
+  // TODO: Implement better test and well actual function
+  const testGame = new Game();
+
+  const actualResult = testGame.createMarkup();
+
+  assert(actualResult);
+});
+
+Deno.test("Game addHtml", () => {
+  // TODO: Implement better test and well actual function
+  document.body.innerHTML = '<div class="terminal">' +
+    '    <div class="left code"></div>' +
+    '    <div class="right code"></div>' +
+    "</div>";
+
+  const testGame = new Game();
+  testGame.createCurrentPasswords();
+
+  const actualResult = testGame.addHtml();
+
+  assert(actualResult);
+});
+
+Deno.test("Game addScript", () => {
+  // TODO: Implement better test and well actual function
+  document.body.innerHTML = '<div class="terminal">' +
+    '    <div class="left code"></div>' +
+    '    <div class="right code"></div>' +
+    "</div>";
+
+  const testGame = new Game();
+
+  const actualResult = testGame.addScript();
+
+  assert(actualResult);
+});
+
+Deno.test("Game createTerminal", () => {
+  // TODO: Implement better test and well actual function
+  document.body.innerHTML = '<div class="terminal">' +
+    '    <div class="left code"></div>' +
+    '    <div class="right code"></div>' +
+    "</div>";
+
+  const testGame = new Game();
+
+  const actualResult = testGame.createPointersForTerminal();
+
+  assert(actualResult);
 });

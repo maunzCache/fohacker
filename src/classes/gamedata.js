@@ -3,7 +3,7 @@
 import Dictionary from './dictionary.js';
 
 // TODO: Implement loading from assets folder as JSON
-var passwords = function () {
+const passwords = function () {
     return {
         4: new Dictionary([
             "SAFE",

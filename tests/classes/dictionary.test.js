@@ -1,13 +1,13 @@
-'use strict';
+"use strict";
 
-import Dictionary from '../../src/classes/dictionary.js';
+import { assertEquals } from "std/assert/mod.ts";
 
-describe('Dictionary', () => {
-    test('constructor', () => {
-        let dummyWordlist = [];
+import Dictionary from "../../src/classes/dictionary.js";
 
-        let actualResult = new Dictionary(dummyWordlist);
+Deno.test("Dictionary constructor", () => {
+  const dummyWordlist = [];
 
-        expect(actualResult.wordList).toStrictEqual([]);
-    });
+  const actualResult = new Dictionary(dummyWordlist);
+
+  assertEquals(actualResult.wordList, []);
 });

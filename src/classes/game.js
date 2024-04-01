@@ -12,7 +12,7 @@ import DudHelper from './dudhelper.js';
 import $ from 'jquery';
 
 // TODO: Implement loading from assets folder as JSON
-let perks = [
+const perks = [
     new Perk(
         "Peek-A-Boo",
         [
@@ -72,10 +72,10 @@ class Game {
     }
 
     levelUp() {
-        let nextExp = this.nextLevelExp();
+        const nextExp = this.nextLevelExp();
 
         while (this.gameData.experience > nextExp) {
-            let possibleOverhead = nextExp - this.gameData.experience;
+            const possibleOverhead = nextExp - this.gameData.experience;
             if (possibleOverhead <= 0) {
                 this.gameData.level++;
                 this.gameData.skillpoints++;
@@ -87,7 +87,7 @@ class Game {
     }
 
     addExperience(words) {
-        let addExp = Math.round((words + 1) * this.gameData.difficulty * 0.35);
+        const addExp = Math.round((words + 1) * this.gameData.difficulty * 0.35);
         this.gameData.experience += addExp;
         Renderer.addExpBeforeInfoInput(addExp);
         this.levelUp();
@@ -115,7 +115,7 @@ class Game {
         }
 
         $('#attempts .attempt').detach();
-        for (var i = 0; this.gameData.attempts > i; i++) {
+        for (let i = 0; this.gameData.attempts > i; i++) {
             Renderer.addAttemptBlock();
         }
 
@@ -123,12 +123,12 @@ class Game {
         Renderer.showSkillpointAmount(this.gameData.skillpoints);
         $.each(perks, function (key, perk) {
             if (perk.meetsRequirements) {
-                var classes = ['perkdiv'];
+                const classes = ['perkdiv'];
                 if (perk.level > 0) {
                     classes.push('active');
                 }
 
-                var description = perk.description[perk.level];
+                let description = perk.description[perk.level];
                 if (description === undefined) {
                     description = "Maxed out."
                 }
@@ -138,10 +138,10 @@ class Game {
         });
         $('.perklist').append();
 
-        let _this = this; // TODO: Workaround because of scope
+        const _this = this; // TODO: Workaround because of scope
         $('.perkdiv').on('click', function () {
             if (_this.gameData.skillpoints > 0) {
-                var perkid = $(this).data("id");
+                const perkid = $(this).data("id");
                 if ((perks[perkid].level + 1) <= perks[perkid].maxlevel) {
                     perks[perkid].level++;
                     _this.gameData.skillpoints--;
@@ -162,18 +162,18 @@ class Game {
     }
 
     createPointersForTerminal() {
-        let lineNumber = Math.random().toString(16).slice(2, 6);
+        const lineNumber = Math.random().toString(16).slice(2, 6);
         Renderer.createPointersForEachTerminalLinenumber(this.terminalData, lineNumber);
     }
 
     createDudCode() {
         // TODO: Replace with code that ensures duds by using a certain skill
         // Iterate for each character
-        for (var dataIndex = 0; (this.terminalData.columns * this.terminalData.rowsPerColumn) > dataIndex; dataIndex++) {
+        for (let dataIndex = 0; (this.terminalData.columns * this.terminalData.rowsPerColumn) > dataIndex; dataIndex++) {
             let randomData = "";
             // Iterate per "line"
-            for (var rowNumber = 0; this.terminalData.dataPerColumn > rowNumber; rowNumber++) {
-                let randomDudIndex = Math.round(Math.random() * (DudHelper.dudCharacters.length - 1));
+            for (let rowNumber = 0; this.terminalData.dataPerColumn > rowNumber; rowNumber++) {
+                const randomDudIndex = Math.round(Math.random() * (DudHelper.dudCharacters.length - 1));
                 randomData += DudHelper.dudCharacters[randomDudIndex];
             }
             console.debug("Duds [" + dataIndex + "]: " + randomData);
@@ -183,23 +183,23 @@ class Game {
 
     createCurrentPasswords() {
         // TODO: Replace with code that ensures passwords by using a certain skill
-        let currentPasswords = [];
+        const currentPasswords = [];
 
         // If dictionary is too small
-        let passwordsForDifficulty = this.gameData.passwords()[this.gameData.difficulty];
-        let amountOfPasswords = passwordsForDifficulty.wordList.length;
+        const passwordsForDifficulty = this.gameData.passwords()[this.gameData.difficulty];
+        const amountOfPasswords = passwordsForDifficulty.wordList.length;
         if (this.gameData.passwordsOnScreen > amountOfPasswords) {
             this.gameData.passwordsOnScreen = amountOfPasswords;
             console.log("Dictionary " + this.getDifficulty() + "(Size: " + this.gameData.difficulty + ") has too few entries (" + amountOfPasswords + ").");
         }
 
-        let tempPasswords = passwordsForDifficulty.wordList.slice();
+        const tempPasswords = passwordsForDifficulty.wordList.slice();
         // Pick password
         this.gameData.password = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
-        for (var passwordIndex = 0; this.gameData.passwordsOnScreen > passwordIndex; passwordIndex++) {
+        for (let passwordIndex = 0; this.gameData.passwordsOnScreen > passwordIndex; passwordIndex++) {
             currentPasswords[passwordIndex] = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
 
-            let position = tempPasswords.indexOf(currentPasswords[passwordIndex], tempPasswords);
+            const position = tempPasswords.indexOf(currentPasswords[passwordIndex], tempPasswords);
             if (~position) {
                 tempPasswords.splice(position, 1);
             }
@@ -209,28 +209,28 @@ class Game {
     }
 
     addPasswordsToData() {
-        let tempPasswords = this.gameData.currentPasswords.wordList.slice();
-        let blockedPositions = [];
+        const tempPasswords = this.gameData.currentPasswords.wordList.slice();
+        const blockedPositions = [];
 
         while (tempPasswords.length > 0) {
-            let randomIndex = this.getRandomIndexForPasswordStart(blockedPositions);
+            const randomIndex = this.getRandomIndexForPasswordStart(blockedPositions);
             if (randomIndex == -1) {
                 continue
             }
 
-            let rowNumberFromRandomIndex = Math.floor(randomIndex / this.terminalData.dataPerColumn);
-            let columnNumberFromRandomIndex = randomIndex % (this.terminalData.dataPerColumn);
+            const rowNumberFromRandomIndex = Math.floor(randomIndex / this.terminalData.dataPerColumn);
+            const columnNumberFromRandomIndex = randomIndex % (this.terminalData.dataPerColumn);
 
-            let nextPassword = tempPasswords.shift();
+            const nextPassword = tempPasswords.shift();
             if ((rowNumberFromRandomIndex + 1) > (this.terminalData.columns * this.terminalData.rowsPerColumn)) {
                 console.log("Accidentally hit " + (rowNumberFromRandomIndex + 1) + "th row during password insertion.");
             }
 
             // TODO: Check in test if there is a dependency to another method
             // Code seems to be undefined
-            let rowIndex = rowNumberFromRandomIndex; // TODO: Potential off-by-one error
-            let columnIndex = columnNumberFromRandomIndex;
-            let code = this.terminalData.code[rowIndex];
+            const rowIndex = rowNumberFromRandomIndex; // TODO: Potential off-by-one error
+            const columnIndex = columnNumberFromRandomIndex;
+            const code = this.terminalData.code[rowIndex];
 
             if (code) {
                 // TODO: Some words are selected but don't exist in code...
@@ -270,14 +270,14 @@ class Game {
     findDuds() {
         console.log("Terminal has size: " + this.terminalData.code.length);
         // Get the end duds first
-        let duds = [];
-        for (var rowIndex = 0; this.terminalData.code.length > rowIndex; rowIndex++) {
+        const duds = [];
+        for (let rowIndex = 0; this.terminalData.code.length > rowIndex; rowIndex++) {
             // TODO: Code below hits only once. Better RegEx?
-            for (var indexInColumn = this.terminalData.code[0].length; 0 < indexInColumn; indexInColumn--) {
-                let endPosition = DudHelper.endDuds.indexOf(this.terminalData.code[rowIndex][indexInColumn]); // TODO: This whole mess makes no sense
+            for (let indexInColumn = this.terminalData.code[0].length; 0 < indexInColumn; indexInColumn--) {
+                const endPosition = DudHelper.endDuds.indexOf(this.terminalData.code[rowIndex][indexInColumn]); // TODO: This whole mess makes no sense
                 if (~endPosition) {
-                    let cutString = this.terminalData.code[rowIndex].substr(0, endPosition);
-                    let startPosition = cutString.indexOf(DudHelper.startDuds[endPosition]);
+                    const cutString = this.terminalData.code[rowIndex].substr(0, endPosition);
+                    const startPosition = cutString.indexOf(DudHelper.startDuds[endPosition]);
                     if (~startPosition) {
                         duds.push([new Dud(endPosition, startPosition, indexInColumn)]);
                         console.log("Adding duds: " + endPosition + "/" + startPosition + "/" + indexInColumn);
@@ -303,8 +303,8 @@ class Game {
 
         // TODO: Use markup array
         // TODO: More than two rows
-        for (var rowIndex = 0; this.terminalData.code.length > rowIndex; rowIndex++) {
-            var selector = "";
+        for (let rowIndex = 0; this.terminalData.code.length > rowIndex; rowIndex++) {
+            let selector = "";
             if (rowIndex < this.terminalData.rowsPerColumn) {
                 selector = '.terminal .left.code';
             } else {
@@ -318,11 +318,11 @@ class Game {
             lineValue = lineValue.replace(/>/g, "&gt;");
 
             let replacedPassword = "";
-            let _this = this; // TODO: Workaround because of scope
+            const _this = this; // TODO: Workaround because of scope
             tmpPasswords.forEach(function (value) {
                 // Finds all single line passwords
                 // TODO: Fails for words including other words
-                let tempNewLineValue = lineValue.replace(value, '<span class="word" data-word="' + value + '">' + value + '</span>');
+                const tempNewLineValue = lineValue.replace(value, '<span class="word" data-word="' + value + '">' + value + '</span>');
 
                 // Assume nothing has been replaced
                 // TODO: Can contain non replaced word
@@ -331,10 +331,10 @@ class Game {
                     if (rowIndex < _this.terminalData.code.length - 1) {
                         // Find the index in the line we need to look up for the split word
                         // e.g. a 4 letter word can have a max of 3 chars and a min of 1 char in one line
-                        let limitOldLine = (_this.terminalData.dataPerColumn - 1) - (value.length - 1);// Actually this will be an index
+                        const limitOldLine = (_this.terminalData.dataPerColumn - 1) - (value.length - 1);// Actually this will be an index
 
-                        let limitNewLine = (value.length - 1);// Also an index
-                        let lineLookAhead = _this.terminalData.code[rowIndex].substr(limitOldLine) + _this.terminalData.code[rowIndex + 1].substr(0, limitNewLine + 1);
+                        const limitNewLine = (value.length - 1);// Also an index
+                        const lineLookAhead = _this.terminalData.code[rowIndex].substr(limitOldLine) + _this.terminalData.code[rowIndex + 1].substr(0, limitNewLine + 1);
                         console.debug("Lookahead ", value, limitOldLine, limitNewLine, lineLookAhead);
 
                         // This is the index of the cut and spliced lines
@@ -369,7 +369,7 @@ class Game {
         // TODO: Move to renderer
         // TODO: Simulate typing the hovered word
         $('.code .word').on('mouseover', function (event) {
-            let passwordHovered = event.target.textContent;
+            const passwordHovered = event.target.textContent;
             console.debug("Hovering: " + passwordHovered);
             $('.info .input').attr('data-content', passwordHovered);
         });
@@ -381,7 +381,7 @@ class Game {
     }
 
     createTerminal() {
-        let _this = this; // TODO: Workaround for scope
+        const _this = this; // TODO: Workaround for scope
         this.clearOld();
 
         console.log("--- Creating pointers ---");
@@ -416,7 +416,7 @@ class Game {
         $('ul.tabs').each(function () {
             // For each set of tabs, we want to keep track of
             // which tab is active and it's associated content
-            var $active, $content, $links = $(this).find('a');
+            let $active, $content, $links = $(this).find('a');
 
             // If the location.hash matches one of the links, use that as the active tab.
             // If no match is found, use the first link as the initial active tab.
@@ -451,22 +451,22 @@ class Game {
 
         // Make passwords clickable
         $('.code .word').on('click', function (event) {
-            let selectedPassword = event.target.textContent;
+            const selectedPassword = event.target.textContent;
 
-            let position = _this.gameData.currentPasswords.wordList.indexOf(selectedPassword);
+            const position = _this.gameData.currentPasswords.wordList.indexOf(selectedPassword);
             if (~position) {
                 _this.gameData.currentPasswords.wordList.splice(position, 1);
             }
 
             let likeness = 0;
-            for (var i = 0; _this.gameData.difficulty > i; i++) {
+            for (let i = 0; _this.gameData.difficulty > i; i++) {
                 if (_this.gameData.password[i] == selectedPassword[i]) {
                     likeness++;
                 }
             }
 
             if (_this.gameData.password == selectedPassword) {
-                let oldLength = _this.gameData.currentPasswords.wordList.length;
+                const oldLength = _this.gameData.currentPasswords.wordList.length;
                 _this.createTerminal();
                 _this.addExperience(oldLength);
                 Renderer.addSelectedPasswordBeforeInput(selectedPassword);
@@ -487,10 +487,10 @@ class Game {
         });
 
         // Break special
-        let linebreak = $('.linebreak');
+        const linebreak = $('.linebreak');
         linebreak.on('mouseenter', function () {
-            let dataWord = $(this).data("word");
-            let siblings = $('[data-word="' + dataWord + '"]');
+            const dataWord = $(this).data("word");
+            const siblings = $('[data-word="' + dataWord + '"]');
             $(siblings).each(function () {
                 $(this).css("background-color", "#82FA58");
                 $(this).css("color", "#0B1907");
@@ -501,7 +501,7 @@ class Game {
         });
 
         // TODO: update data word :(
-        let pagebreak = $('.pagebreak');
+        const pagebreak = $('.pagebreak');
         pagebreak.on('mouseenter', function () {
             pagebreak.css("background-color", "#82FA58");
             pagebreak.css("color", "#0B1907");

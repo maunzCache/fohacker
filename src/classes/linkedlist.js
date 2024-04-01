@@ -11,11 +11,11 @@ class LinkedList {
     }
 
     appendNode(type, value) {
-        let newNode = new ListNode(type, value);
+        const newNode = new ListNode(type, value);
         if (this.head == null) {
             this.head = newNode;
         } else {
-            let lastNode = this.getLastNode();
+            const lastNode = this.getLastNode();
             lastNode.child = newNode
         }
     }
@@ -65,9 +65,9 @@ class LinkedList {
 
     removeNodeAtIndex(index) {
         // TODO: Do check if input was an integer and in bounds.
-        let tmpLastParentNode = this.getNodeAtIndex(index - 1);
+        const tmpLastParentNode = this.getNodeAtIndex(index - 1);
 
-        var newChild = null;
+        let newChild = null;
         if (tmpLastParentNode.child) {
             newChild = tmpLastParentNode.child;
         }
@@ -77,27 +77,27 @@ class LinkedList {
 
 export default LinkedList;
 
-let getRandomIntInclusive = function (min, max) {
+const getRandomIntInclusive = function (min, max) {
     // See: https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Math/random
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-let generateLinkedListForLine = function () {
-    let tmpLinkedList = new LinkedList();
+const generateLinkedListForLine = function () {
+    const tmpLinkedList = new LinkedList();
 
     // TODO: Move variables to somewhere else
-    let nodeTypeChance = {
+    const nodeTypeChance = {
         'dud': 40,
         'dummy': 50,
         'password': 10
     };
-    let maxPasswordLength = 4;
-    let maxValueLength = 16;
+    const maxPasswordLength = 4;
+    const maxValueLength = 16;
 
     while (tmpLinkedList.getNodeValueLength() < maxValueLength) {
-        let nodeTypes = ['dud', 'dummy'];
+        const nodeTypes = ['dud', 'dummy'];
         if ((maxValueLength - tmpLinkedList.getNodeValueLength()) >= maxPasswordLength) {
             nodeTypes.push('password');
         }
@@ -110,7 +110,7 @@ let generateLinkedListForLine = function () {
             maxTypeChance += nodeTypeChance[value];
         });
 
-        let tmpNodeTypeChance = getRandomIntInclusive(1, maxTypeChance);
+        const tmpNodeTypeChance = getRandomIntInclusive(1, maxTypeChance);
         if ((tmpNodeTypeChance >= 1) && (tmpNodeTypeChance <= nodeTypeChance['dud'])) {
             randomType = 'dud'; // TODO: Should access nodeTypes
             nodeValue = '{'

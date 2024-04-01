@@ -1,0 +1,17 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.221.0/",
+    "deno_dom/": "https://deno.land/x/deno_dom@v0.1.45/",
+    "jquery": "npm:jquery@3.7.1"
+  },
+  "lint": {
+    "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
+  },
+  "fmt": {
+    "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
+  },
+  "tasks": {
+    "build": "deno run -A esbuild.ts build"
+  },
+  "exclude": ["dist/"]
+}
