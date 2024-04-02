@@ -6384,7 +6384,9 @@
       (0, import_jquery.default)(".info .input").before('<span class="info">Level Up</span><br>');
     }
     static addExpBeforeInfoInput(addExp) {
-      (0, import_jquery.default)(".info .input").before('<span class="info">EXP +' + addExp + "</span><br>");
+      (0, import_jquery.default)(".info .input").before(
+        '<span class="info">EXP +' + addExp + "</span><br>"
+      );
     }
     static emptyTerminalLinenumber() {
       (0, import_jquery.default)(".terminal .linenumber").empty();
@@ -6424,7 +6426,9 @@
       }
     }
     static addFOHackerVersionBeforeInfoInput() {
-      (0, import_jquery.default)(".info .input").before("Fallout Hacker<br>Version " + game_default.version + "<br>");
+      (0, import_jquery.default)(".info .input").before(
+        "Fallout Hacker<br>Version " + game_default.version + "<br>"
+      );
     }
     static showPasswordInTerminalHeader(password) {
       (0, import_jquery.default)(".password").text("(Password=" + password + ")");
@@ -6433,13 +6437,19 @@
       (0, import_jquery.default)("#attempts").append('<span class="attempt">&nbsp;&nbsp;</span>');
     }
     static showSkillpointAmount(skillpoints) {
-      (0, import_jquery.default)(".perklist").append('Skillpoints: <div class="skillpoints">' + skillpoints + "</div><br>");
+      (0, import_jquery.default)(".perklist").append(
+        'Skillpoints: <div class="skillpoints">' + skillpoints + "</div><br>"
+      );
     }
     static appendPerkBoxToPerklist(classes, key, perk, description) {
-      (0, import_jquery.default)(".perklist").append('<div class="' + classes.join(" ") + '" data-id="' + key + '" title="' + perk.description[0] + '"><b>' + perk.title + "</b> (" + perk.level + "/" + perk.maxlevel + ")<br><span>" + description + "</span></div>");
+      (0, import_jquery.default)(".perklist").append(
+        '<div class="' + classes.join(" ") + '" data-id="' + key + '" title="' + perk.description[0] + '"><b>' + perk.title + "</b> (" + perk.level + "/" + perk.maxlevel + ")<br><span>" + description + "</span></div>"
+      );
     }
     static addSelectedPasswordBeforeInput(selectedPassword) {
-      (0, import_jquery.default)(".info .input").before('<span class="try">' + selectedPassword + "</span><br>");
+      (0, import_jquery.default)(".info .input").before(
+        '<span class="try">' + selectedPassword + "</span><br>"
+      );
     }
     static addAnyHtmlBeforeInput(html) {
       (0, import_jquery.default)(".info .input").before(html);
@@ -6546,7 +6556,8 @@
   var Dud = class {
     constructor(dudPos, startDud, endDud) {
       this.dudPos = dudPos;
-      this.startDud = startDud, this.endDud = endDud;
+      this.startDud = startDud;
+      this.endDud = endDud;
     }
   };
   var dud_default = Dud;
@@ -6627,7 +6638,9 @@
       this.terminalData = new terminaldata_default();
     }
     nextLevelExp() {
-      return Math.round(Math.exp((this.gameData.level + 1) * 0.45) + Math.exp(this.gameData.level * 0.45) * 6);
+      return Math.round(
+        Math.exp((this.gameData.level + 1) * 0.45) + Math.exp(this.gameData.level * 0.45) * 6
+      );
     }
     levelUp() {
       const nextExp = this.nextLevelExp();
@@ -6662,7 +6675,10 @@
     updateUI() {
       (0, import_jquery2.default)(".infobar .difficulty").text(this.getDifficulty());
       (0, import_jquery2.default)(".infobar .level").text(this.gameData.level);
-      (0, import_jquery2.default)(".expbar").css("width", this.gameData.experience / (this.nextLevelExp() / 100));
+      (0, import_jquery2.default)(".expbar").css(
+        "width",
+        this.gameData.experience / (this.nextLevelExp() / 100)
+      );
       if (perks[0]["level"] > 0) {
         renderer_default.showPasswordInTerminalHeader(this.gameData.password);
       }
@@ -6708,13 +6724,18 @@
     }
     createPointersForTerminal() {
       const lineNumber = Math.random().toString(16).slice(2, 6);
-      renderer_default.createPointersForEachTerminalLinenumber(this.terminalData, lineNumber);
+      renderer_default.createPointersForEachTerminalLinenumber(
+        this.terminalData,
+        lineNumber
+      );
     }
     createDudCode() {
       for (let dataIndex = 0; this.terminalData.columns * this.terminalData.rowsPerColumn > dataIndex; dataIndex++) {
         let randomData = "";
         for (let rowNumber = 0; this.terminalData.dataPerColumn > rowNumber; rowNumber++) {
-          const randomDudIndex = Math.round(Math.random() * (dudhelper_default.dudCharacters.length - 1));
+          const randomDudIndex = Math.round(
+            Math.random() * (dudhelper_default.dudCharacters.length - 1)
+          );
           randomData += dudhelper_default.dudCharacters[randomDudIndex];
         }
         console.debug("Duds [" + dataIndex + "]: " + randomData);
@@ -6727,13 +6748,18 @@
       const amountOfPasswords = passwordsForDifficulty.wordList.length;
       if (this.gameData.passwordsOnScreen > amountOfPasswords) {
         this.gameData.passwordsOnScreen = amountOfPasswords;
-        console.log("Dictionary " + this.getDifficulty() + "(Size: " + this.gameData.difficulty + ") has too few entries (" + amountOfPasswords + ").");
+        console.log(
+          "Dictionary " + this.getDifficulty() + "(Size: " + this.gameData.difficulty + ") has too few entries (" + amountOfPasswords + ")."
+        );
       }
       const tempPasswords = passwordsForDifficulty.wordList.slice();
       this.gameData.password = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
       for (let passwordIndex = 0; this.gameData.passwordsOnScreen > passwordIndex; passwordIndex++) {
         currentPasswords[passwordIndex] = tempPasswords[Math.round(Math.random() * (tempPasswords.length - 1))];
-        const position = tempPasswords.indexOf(currentPasswords[passwordIndex], tempPasswords);
+        const position = tempPasswords.indexOf(
+          currentPasswords[passwordIndex],
+          tempPasswords
+        );
         if (~position) {
           tempPasswords.splice(position, 1);
         }
@@ -6749,11 +6775,15 @@
         if (randomIndex == -1) {
           continue;
         }
-        const rowNumberFromRandomIndex = Math.floor(randomIndex / this.terminalData.dataPerColumn);
+        const rowNumberFromRandomIndex = Math.floor(
+          randomIndex / this.terminalData.dataPerColumn
+        );
         const columnNumberFromRandomIndex = randomIndex % this.terminalData.dataPerColumn;
         const nextPassword = tempPasswords.shift();
         if (rowNumberFromRandomIndex + 1 > this.terminalData.columns * this.terminalData.rowsPerColumn) {
-          console.log("Accidentally hit " + (rowNumberFromRandomIndex + 1) + "th row during password insertion.");
+          console.log(
+            "Accidentally hit " + (rowNumberFromRandomIndex + 1) + "th row during password insertion."
+          );
         }
         const rowIndex = rowNumberFromRandomIndex;
         const columnIndex = columnNumberFromRandomIndex;
@@ -6763,9 +6793,23 @@
             continue;
           } else if (rowIndex >= 0 && rowIndex <= this.terminalData.rowsPerColumn * this.terminalData.columns - 1) {
             this.terminalData.code[rowIndex] = code.substr(0, columnIndex) + nextPassword + code.substr(columnIndex + nextPassword.length);
-            blockedPositions.push(randomIndex, randomIndex - 1, randomIndex + 1, randomIndex - 2, randomIndex + 2, randomIndex - 3, randomIndex + 3, randomIndex - 4, randomIndex + 4);
+            blockedPositions.push(
+              randomIndex,
+              randomIndex - 1,
+              randomIndex + 1,
+              randomIndex - 2,
+              randomIndex + 2,
+              randomIndex - 3,
+              randomIndex + 3,
+              randomIndex - 4,
+              randomIndex + 4
+            );
           } else {
-            console.error("Row calculation row for password", rowIndex, nextPassword);
+            console.error(
+              "Row calculation row for password",
+              rowIndex,
+              nextPassword
+            );
           }
         } else {
           console.log("code is not defined. Implement testing.");
@@ -6773,7 +6817,9 @@
       }
     }
     getRandomIndexForPasswordStart(blockedPositions) {
-      let randomPosition = Math.round(Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty));
+      let randomPosition = Math.round(
+        Math.random() * (this.terminalData.maxCharacters() - this.gameData.difficulty)
+      );
       if (randomPosition < 0) {
         randomPosition = 0;
       }
@@ -6781,7 +6827,9 @@
         randomPosition = -1;
       }
       if (randomPosition >= this.terminalData.maxCharacters()) {
-        console.log("Position calculation wrong: " + randomPosition + " of " + this.terminalData.maxCharacters());
+        console.log(
+          "Position calculation wrong: " + randomPosition + " of " + this.terminalData.maxCharacters()
+        );
       }
       return randomPosition;
     }
@@ -6790,13 +6838,22 @@
       const duds = [];
       for (let rowIndex = 0; this.terminalData.code.length > rowIndex; rowIndex++) {
         for (let indexInColumn = this.terminalData.code[0].length; 0 < indexInColumn; indexInColumn--) {
-          const endPosition = dudhelper_default.endDuds.indexOf(this.terminalData.code[rowIndex][indexInColumn]);
+          const endPosition = dudhelper_default.endDuds.indexOf(
+            this.terminalData.code[rowIndex][indexInColumn]
+          );
           if (~endPosition) {
-            const cutString = this.terminalData.code[rowIndex].substr(0, endPosition);
-            const startPosition = cutString.indexOf(dudhelper_default.startDuds[endPosition]);
+            const cutString = this.terminalData.code[rowIndex].substr(
+              0,
+              endPosition
+            );
+            const startPosition = cutString.indexOf(
+              dudhelper_default.startDuds[endPosition]
+            );
             if (~startPosition) {
               duds.push([new dud_default(endPosition, startPosition, indexInColumn)]);
-              console.log("Adding duds: " + endPosition + "/" + startPosition + "/" + indexInColumn);
+              console.log(
+                "Adding duds: " + endPosition + "/" + startPosition + "/" + indexInColumn
+              );
               console.debug(this.terminalData.code[rowIndex]);
             }
           }
@@ -6824,13 +6881,22 @@
         let replacedPassword = "";
         const _this = this;
         tmpPasswords.forEach(function(value) {
-          const tempNewLineValue = lineValue.replace(value, '<span class="word" data-word="' + value + '">' + value + "</span>");
+          const tempNewLineValue = lineValue.replace(
+            value,
+            '<span class="word" data-word="' + value + '">' + value + "</span>"
+          );
           if (tempNewLineValue === lineValue) {
             if (rowIndex < _this.terminalData.code.length - 1) {
               const limitOldLine = _this.terminalData.dataPerColumn - 1 - (value.length - 1);
               const limitNewLine = value.length - 1;
               const lineLookAhead = _this.terminalData.code[rowIndex].substr(limitOldLine) + _this.terminalData.code[rowIndex + 1].substr(0, limitNewLine + 1);
-              console.debug("Lookahead ", value, limitOldLine, limitNewLine, lineLookAhead);
+              console.debug(
+                "Lookahead ",
+                value,
+                limitOldLine,
+                limitNewLine,
+                lineLookAhead
+              );
             }
           } else {
             replacedPassword = value;
@@ -6883,7 +6949,9 @@
       }
       (0, import_jquery2.default)("ul.tabs").each(function() {
         let $active, $content, $links = (0, import_jquery2.default)(this).find("a");
-        $active = (0, import_jquery2.default)($links.filter('[href="' + location.hash + '"]')[0] || $links[0]);
+        $active = (0, import_jquery2.default)(
+          $links.filter('[href="' + location.hash + '"]')[0] || $links[0]
+        );
         $active.addClass("active");
         $content = (0, import_jquery2.default)($active[0].hash);
         $links.not($active).each(function() {
@@ -6901,7 +6969,9 @@
       });
       (0, import_jquery2.default)(".code .word").on("click", function(event) {
         const selectedPassword = event.target.textContent;
-        const position = _this.gameData.currentPasswords.wordList.indexOf(selectedPassword);
+        const position = _this.gameData.currentPasswords.wordList.indexOf(
+          selectedPassword
+        );
         if (~position) {
           _this.gameData.currentPasswords.wordList.splice(position, 1);
         }
@@ -6916,16 +6986,24 @@
           _this.createTerminal();
           _this.addExperience(oldLength);
           renderer_default.addSelectedPasswordBeforeInput(selectedPassword);
-          renderer_default.addAnyHtmlBeforeInput('<span class="text">Access granted.</span><br>');
+          renderer_default.addAnyHtmlBeforeInput(
+            '<span class="text">Access granted.</span><br>'
+          );
         } else {
           _this.gameData.attempts--;
           renderer_default.addSelectedPasswordBeforeInput(selectedPassword);
-          renderer_default.addAnyHtmlBeforeInput('<span class="likeness">Likeness=' + likeness + "</span><br>");
-          renderer_default.addAnyHtmlBeforeInput('<span class="text">Entry denied.</span><br>');
+          renderer_default.addAnyHtmlBeforeInput(
+            '<span class="likeness">Likeness=' + likeness + "</span><br>"
+          );
+          renderer_default.addAnyHtmlBeforeInput(
+            '<span class="text">Entry denied.</span><br>'
+          );
           if (_this.gameData.attempts == 0) {
             _this.createTerminal();
             renderer_default.addSelectedPasswordBeforeInput(selectedPassword);
-            renderer_default.addAnyHtmlBeforeInput('<span class="text">Terminal locked.</span><br>');
+            renderer_default.addAnyHtmlBeforeInput(
+              '<span class="text">Terminal locked.</span><br>'
+            );
           }
         }
         _this.updateUI();

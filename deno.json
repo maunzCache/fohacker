@@ -11,7 +11,8 @@
     "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
   },
   "tasks": {
-    "build": "deno run -A esbuild.ts build"
+    "build": "deno run -A esbuild.ts build",
+    "init": "deno cache --node-modules-dir src/fohacker.js"
   },
   "exclude": ["dist/"]
 }
