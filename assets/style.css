@@ -43,7 +43,7 @@ ul {
   width: 0;
 }
 
-.infobar {
+#infobar {
   border: 2px solid #82FA58;
   display: inline-block;
   margin-bottom: 20px;
@@ -63,10 +63,10 @@ ul {
 }
 
 /* Terminal */
-.terminal {
+#terminal {
   border: 5px solid #464646;
   border-radius: 5px;
-  display: inline-block;
+  display: block;
   float: left;
   margin: 0 auto;
   padding: 15px;
@@ -130,46 +130,46 @@ ul {
 }
 
 /* Tabmenu */
-.tabmenu {
-  display: inline-block;
+#tabmenu {
+  display: block;
   float: left;
   margin-left: 20px;
   text-align: left;
 }
 
-.tabmenu > div {
+#tabmenu > div {
   border: 2px solid #82FA58;
   padding: 5px;
 }
 
-.tabmenu a {
+#tabmenu a {
   display: inline-block;
   padding: 5px;
   text-decoration: none;
 }
 
-.tabmenu a:hover{
+#tabmenu a:hover{
   background-color: #82FA58;
   color: #0B1907;
 }
 
-.tabmenu a.active {
+#tabmenu a.active {
   border: 2px solid #82FA58;
   border-bottom: 0 none;
 }
 
-.tabmenu .tabs {
+#tabmenu .tabs {
   margin: 0;
   padding: 0;
 }
 
-.tabmenu  .tabs li {
+#tabmenu  .tabs li {
   display: inline;
   list-style: outside none none;
 }
 
 /* Perkbar */
-.perklist {
+#perklist {
   border: 2px solid #82FA58;
   display: inline-block;
   margin-top: 20px;
@@ -195,8 +195,8 @@ ul {
 }
 
 /* Mixed */
-.infobar > div,
-.perklist > div {
+#infobar > div,
+#perklist > div {
   display: inline-block;
   margin: 0 auto;
 }

@@ -1,7 +1,10 @@
 import esbuild from "npm:esbuild@0.20.2";
 
-await esbuild.build({
-  entryPoints: ["./src/fohacker.js"],
+const buildCtx = await esbuild.context({
+  entryPoints: ["./src/app.jsx"],
   bundle: true,
-  outdir: "./dist",
+  outfile: "./dist/index.js",
 });
+
+await buildCtx.watch();
+console.log("Waiting for file changes...");

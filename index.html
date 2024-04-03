@@ -3,66 +3,14 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Fallout Hacker</title>
-    <script language="javascript" type="text/javascript" src="dist/fohacker.js"></script>
+    <title>fohacker - react</title>
     <link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
 
 <body>
-    <h1>Don't try to fix anything. Just write down the idea and probably retry the implementation!</h1>
-    <div class="infobar">
-        Difficulty: <div class="difficulty"></div> |
-        Health: <div class="health"><span class="healthbar"></span></div> |
-        Level: <div class="level"></div> |
-        Experience: <div class="exp"><span class="expbar"></span></div> |
-        Caps: <div class="caps">1'000'000</div>
-    </div>
-    <div class="terminal">
-        <div class="header">
-            <p>Welcome to ROBCO Industries (TM) Termlink</p>
-            <p>Password Required <span class="password"></span></p>
-            <p id="attempts">Attempts Remaining:
-            </p>
-        </div>
-        <div class="linenumber column"></div>
-        <div class="code left column">
-            <div class="code left column"></div>
-        </div>
-        <div class="linenumber column"></div>
-        <div class="code right column">
-            <div class="code right column"></div>
-        </div>
-        <div class="info column">
-            <span class="input">&nbsp</span>
-        </div>
-    </div>
-    <div class="tabmenu">
-        <ul class="tabs">
-            <li><a href="#inventory">Inventory</a></li>
-            <li><a href="#help">Help</a></li>
-            <li><a href="#settings">Settings</a></li>
-            <li><a href="#about">About</a></li>
-        </ul>
-        <div id="inventory">
-            Your inventory!
-        </div>
-        <div id="help">
-            Some help!
-        </div>
-        <div id="settings">
-            Settings coming soon!
-        </div>
-        <div id="about">
-            It's me not you!<br><br>
-            Changelog:
-            <h4>0.1 (alpha)</h4>
-            <ul>
-                <li>Initial release</li>
-            </ul>
-        </div>
-    </div>
-    <div class="perklist">
-    </div>
+    <div id="app"></div>
+    <!-- Put scripts here or make sure DOM has loaded -->
+    <script language="javascript" type="text/javascript" src="dist/index.js"></script>
 </body>
 
 </html>

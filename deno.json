@@ -2,7 +2,8 @@
   "imports": {
     "std/": "https://deno.land/std@0.221.0/",
     "deno_dom/": "https://deno.land/x/deno_dom@v0.1.45/",
-    "jquery": "npm:jquery@3.7.1"
+    "react": "npm:react@18.2.0",
+    "react-dom": "npm:react-dom@18.2.0"
   },
   "lint": {
     "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
@@ -12,7 +13,7 @@
   },
   "tasks": {
     "build": "deno run -A esbuild.ts build",
-    "init": "deno cache --node-modules-dir src/fohacker.js"
+    "init": "deno cache --node-modules-dir src/app.jsx"
   },
   "exclude": ["dist/"]
 }
