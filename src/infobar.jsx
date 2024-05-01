@@ -33,6 +33,6 @@ export function InfoBar() {
         Health: <div className="health"><HealthBar size={(health/maxHealth)*100}/></div> |
         Level: <div className="level">{level}</div> |
         Experience: <div className="exp"><ExpBar size={(exp/maxExp)*100}/></div> |
-        Caps: <div className="caps">{caps}</div>
+        Caps: <div className="caps">{caps.toLocaleString('en-US')}</div>
     </div>;
   }

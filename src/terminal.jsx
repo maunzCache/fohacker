@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 export function Terminal() {
+  const [attempts, setAttempts] = useState(3);
+
   return (
     <div id="terminal">
       <div className="header">
@@ -9,7 +11,7 @@ export function Terminal() {
           Password Required <span className="password"></span>
         </p>
         <p id="attempts">
-          Attempts Remaining:
+          Attempts Remaining: {attempts}
         </p>
       </div>
       <div className="linenumber column"></div>
@@ -21,7 +23,7 @@ export function Terminal() {
         <div className="code right column"></div>
       </div>
       <div className="info column">
-        <span className="input">&nbsp</span>
+        <span className="input">&nbsp;</span>
       </div>
     </div>
   );

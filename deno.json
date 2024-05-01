@@ -1,9 +1,9 @@
 {
   "imports": {
-    "std/": "https://deno.land/std@0.221.0/",
+    "std/": "https://deno.land/std@0.224.0/",
     "deno_dom/": "https://deno.land/x/deno_dom@v0.1.45/",
-    "react": "npm:react@18.2.0",
-    "react-dom": "npm:react-dom@18.2.0"
+    "react": "npm:react@18.3.1",
+    "react-dom": "npm:react-dom@18.3.1"
   },
   "lint": {
     "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
