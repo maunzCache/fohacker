@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import Perk from "./classes/perk.js";
 
-export function PerkList() {
+export default function PerkList() {
   const [perks, setPerks] = useState([
     new Perk(
       "Peek-A-Boo",

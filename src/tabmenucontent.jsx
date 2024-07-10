@@ -1,6 +1,6 @@
 import React from "react";
 
-export function TabMenuContent({ tabState }) {
+export default function TabMenuContent({ tabState }) {
   switch (tabState) {
     case "inventory":
       return (

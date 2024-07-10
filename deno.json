@@ -1,7 +1,5 @@
 {
   "imports": {
-    "std/": "https://deno.land/std@0.224.0/",
-    "deno_dom/": "https://deno.land/x/deno_dom@v0.1.45/",
     "react": "npm:react@18.3.1",
     "react-dom": "npm:react-dom@18.3.1"
   },
@@ -12,8 +10,9 @@
     "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
   },
   "tasks": {
-    "build": "deno run -A esbuild.ts build",
-    "init": "deno cache --node-modules-dir src/app.jsx"
+    "build": "deno task init && deno run -A esbuild.ts build",
+    "init": "deno cache src/index.jsx --reload --lock-write"
   },
-  "exclude": ["dist/"]
+  "exclude": ["dist/"],
+  "nodeModulesDir": true
 }

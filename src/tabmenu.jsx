@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import { TabMenuContent } from "./tabmenucontent.jsx";
+import TabMenuContent from "./tabmenucontent.jsx";
 
-export function TabMenu() {
+export default function TabMenu() {
   const [tabState, setTabState] = useState("inventory");
 
   return (

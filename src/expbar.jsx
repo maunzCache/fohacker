@@ -1,5 +1,5 @@
 import React from "react";
 
-export function ExpBar({size}) {
+export default function ExpBar({size}) {
   return <span className="expbar" style={{width: size}}></span>;
 }

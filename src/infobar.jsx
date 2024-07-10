@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
-import { HealthBar } from "./healthbar.jsx";
-import { ExpBar } from "./expbar.jsx";
+import HealthBar from "./healthbar.jsx";
+import ExpBar from "./expbar.jsx";
 
-export function InfoBar() {
+export default function InfoBar() {
     const [difficulty, setDifficulty] = useState(4); // aka word length
     const maxHealth = 100;
     const [health, setHealth] = useState(100);
