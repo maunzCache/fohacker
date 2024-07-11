@@ -23574,7 +23574,8 @@
   // src/codeinput.jsx
   var import_react4 = __toESM(require_react());
   function CodeInput({ previewSolution }) {
-    return /* @__PURE__ */ import_react4.default.createElement("div", { className: "info column" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "input", "data-content": previewSolution ? previewSolution : "\xA0" }, previewSolution ? "" : "\xA0"));
+    const gameVersion = "0.1 (alpha)";
+    return /* @__PURE__ */ import_react4.default.createElement("div", { className: "info column" }, "Fallout Hacker", /* @__PURE__ */ import_react4.default.createElement("br", null), "Version ", gameVersion, /* @__PURE__ */ import_react4.default.createElement("br", null), /* @__PURE__ */ import_react4.default.createElement("span", { className: "input", "data-content": previewSolution ? previewSolution : "\xA0" }, previewSolution ? "\xA0" : "\xA0"));
   }
 
   // src/terminal.jsx
@@ -23618,13 +23619,13 @@
   function TabMenuContent({ tabState }) {
     switch (tabState) {
       case "inventory":
-        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "inventory" }, "Your inventory!");
+        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "inventory" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "itemBox" }, "Cram"), /* @__PURE__ */ import_react6.default.createElement("span", { className: "itemBox" }, "Jet"), /* @__PURE__ */ import_react6.default.createElement("span", { className: "itemBox" }, "Nuka-Cola"), /* @__PURE__ */ import_react6.default.createElement("span", { className: "itemBox" }, "Psycho"), /* @__PURE__ */ import_react6.default.createElement("span", { className: "itemBox" }, "RadAway"), /* @__PURE__ */ import_react6.default.createElement("span", { className: "itemBox" }, "Stimpak"));
       case "help":
-        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "help" }, "Some help!");
+        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "help" }, "This game was inspired by the Fallout hacking mini game introduced in Fallout 3.", /* @__PURE__ */ import_react6.default.createElement("br", null), "It plays like >", /* @__PURE__ */ import_react6.default.createElement("a", { href: "https://en.wikipedia.org/wiki/Mastermind_(board_game)", target: "_blank" }, "Mastermind"), "<:", /* @__PURE__ */ import_react6.default.createElement("br", null), /* @__PURE__ */ import_react6.default.createElement("ol", null, /* @__PURE__ */ import_react6.default.createElement("li", null, "Pick one of the words from the terminal."), /* @__PURE__ */ import_react6.default.createElement("li", null, "If wrong, you'll get an indicator how likely the chosen word is to the code word."), /* @__PURE__ */ import_react6.default.createElement("li", null, "The higher the indicator, the more letters are similar to the code word."), /* @__PURE__ */ import_react6.default.createElement("li", null, "But watch out: You only have a limited amount of tries until you get shocked by the terminal."), /* @__PURE__ */ import_react6.default.createElement("li", null, "If you're health drops to zero, it's game over!")));
       case "settings":
-        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "settings" }, "Settings coming soon!");
+        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "settings" }, "Customized the game to your desires.", /* @__PURE__ */ import_react6.default.createElement("form", null, /* @__PURE__ */ import_react6.default.createElement("fieldset", null, /* @__PURE__ */ import_react6.default.createElement("legend", null, "Select language"), /* @__PURE__ */ import_react6.default.createElement("label", null, /* @__PURE__ */ import_react6.default.createElement("input", { type: "radio", name: "english", value: "en-US", defaultChecked: true }), "English (US)"), /* @__PURE__ */ import_react6.default.createElement("label", null, /* @__PURE__ */ import_react6.default.createElement("input", { type: "radio", name: "german", value: "de-DE" }), "German (DE)"))));
       case "about":
-        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "about" }, "It's me not you!", /* @__PURE__ */ import_react6.default.createElement("br", null), /* @__PURE__ */ import_react6.default.createElement("br", null), "Changelog:", /* @__PURE__ */ import_react6.default.createElement("h4", null, "0.1 (alpha)"), /* @__PURE__ */ import_react6.default.createElement("ul", null, /* @__PURE__ */ import_react6.default.createElement("li", null, "Initial release")));
+        return /* @__PURE__ */ import_react6.default.createElement("div", { id: "about" }, "FOHacker ist a Fallout inspired game.", /* @__PURE__ */ import_react6.default.createElement("br", null), /* @__PURE__ */ import_react6.default.createElement("br", null), "Changelog:", /* @__PURE__ */ import_react6.default.createElement("h4", null, "0.1 (alpha)"), /* @__PURE__ */ import_react6.default.createElement("ul", null, /* @__PURE__ */ import_react6.default.createElement("li", null, "Initial release")));
       default:
         return /* @__PURE__ */ import_react6.default.createElement("div", null, "Unknown tab.");
     }
