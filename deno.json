@@ -1,7 +1,7 @@
 {
   "imports": {
-    "react": "npm:react@18.3.1",
-    "react-dom": "npm:react-dom@18.3.1"
+    "react": "npm:react@19.0.0",
+    "react-dom": "npm:react-dom@19.0.0"
   },
   "lint": {
     "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
@@ -11,8 +11,8 @@
   },
   "tasks": {
     "build": "deno task init && deno run -A esbuild.ts build",
-    "init": "deno cache src/index.jsx --reload --lock-write"
+    "init": "deno cache src/index.jsx --reload --lock"
   },
   "exclude": ["dist/"],
-  "nodeModulesDir": true
+  "nodeModulesDir": "auto"
 }
