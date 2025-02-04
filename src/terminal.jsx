@@ -1,19 +1,40 @@
 import React, { useState } from "react";
 
-import CodeInput from "./codeinput.jsx";
+function CodeInput({ previewSolution }) {
+  // TODO: Pull from build step
+  const gameVersion = "0.1 (alpha)"
+
+  return (
+    <div className="info column">
+      Fallout Hacker<br />
+      Version {gameVersion}<br />
+      <span className="input" data-content={previewSolution ? previewSolution : "\u00A0"}>{previewSolution ? "\u00A0" : "\u00A0"}</span>
+    </div>
+  );
+}
+
+function CodeLine({codeWord, onWordOver, onWordOut}) {
+  return <span className="dud" data-word={codeWord} onMouseOver={onWordOver} onMouseOut={onWordOut}>{codeWord}</span>
+}
 
 export default function Terminal() {
   const [attempts, setAttempts] = useState(3);
   const [hoverValue, setHoverValue] = useState("");
 
   const lineBaseNumber = Math.floor(Math.random() * 9999);
+  const maxLines = 16;
+  const maxColumns = 2;
 
-  function generateLineNumber(increment) {
-    // TODO: Increment should be a multiple of 2
-    const lineNumber = (lineBaseNumber + increment).toString(16);
+  const lineNumbers = [...Array(maxLines * maxColumns)].map((_, key) => {
+    const lineNumber = (lineBaseNumber + (key * 12)).toString(16);
     const sizeDiff = 4 - lineNumber.length;
-    return "0x" + Array(sizeDiff + 1).join("0") + lineNumber;
-  }
+    return (
+      <>
+        <span key={"lineno_" + key}>0x{Array(sizeDiff + 1).join("0")}{lineNumber}</span>
+        <br></br>
+      </>
+    );
+  });
 
   function getRandomString() {
     const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
@@ -24,40 +45,36 @@ export default function Terminal() {
     });
   }
 
-  const maxLines = 16;
-
   function hoveringCodeWord(value) {
     setHoverValue(value);
   }
 
-  // TODO: Pages start with the same number
-  function terminalPage({ pageName }) {
+  const codeLines = [...Array(maxLines * maxColumns)].map((_, key) => { 
+    const codeWord = getRandomString().join("");
     return (
       <>
-        <div className="linenumber column">
-          {[...Array(maxLines)].map((_value, key) => {
-            return (
-              <>
-                <span key={"lineno_" + pageName + key}>{generateLineNumber(key * 12)}</span>
-                <br></br>
-              </>
-            );
-          })}
-        </div>
-        <div className={"code column " + pageName}>
-          {[...Array(maxLines)].map((_, key) => {
-            const codeWord = getRandomString().join("");
-            return (
-              <>
-                <span key={"codeno_" + pageName + key} className="dud" data-word={codeWord} onMouseOver={() => hoveringCodeWord(codeWord)} onMouseOut={() => hoveringCodeWord("")}>{codeWord}</span>
-                <br></br>
-              </>
-            );
-          })}
-        </div>
+        <CodeLine key={"codeno_" + key} codeWord={codeWord} onWordOver={() => hoveringCodeWord(codeWord)} onWordOut={() => hoveringCodeWord("")} />
+        <br></br>
       </>
     );
-  }
+   });
+
+   const terminalPages = (
+    <>
+      <div className="linenumber column">
+      {lineNumbers.slice(0, maxLines)}
+      </div>
+      <div className={"code column left"}>
+      {codeLines.slice(0, maxLines)}
+      </div>
+      <div className="linenumber column">
+      {lineNumbers.slice(maxLines, maxLines * maxColumns)}
+      </div>
+      <div className={"code column right"}>
+      {codeLines.slice(maxLines, maxLines * maxColumns)}
+      </div>
+    </>
+  );
 
   // TODO: '.input .info' element is left of the terminal window instead of below.
   // Dirty fix with fixed width of 580px
@@ -72,14 +89,13 @@ export default function Terminal() {
           Attempts Remaining: {[...Array(attempts)].map(() => {
             return (
               <>
-                <span className="attempt">&nbsp;&nbsp;</span>
+                <span key={attempts} className="attempt">&nbsp;&nbsp;</span>
               </>
             );
           })}
         </p>
       </div>
-      {terminalPage("left")}
-      {terminalPage("right")}
+      {terminalPages}
       <CodeInput previewSolution={hoverValue} />
     </div>
   );
