@@ -1,7 +1,8 @@
 {
   "imports": {
     "react": "npm:react@19.0.0",
-    "react-dom": "npm:react-dom@19.0.0"
+    "react-dom": "npm:react-dom@19.0.0",
+    "react-scan": "npm:react-scan@^0.1.3"
   },
   "lint": {
     "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
