@@ -19468,6 +19468,7 @@
     const lineBaseNumber = Math.floor(Math.random() * 9999);
     const maxLines = 16;
     const maxColumns = 2;
+    const charCountPerLine = 12;
     const passwords = {
       4: [
         "SAFE",
@@ -19491,7 +19492,7 @@
     };
     function getRandomDudString() {
       const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/|_";
-      return [...Array(12)].map((_value, _key) => {
+      return [...Array(charCountPerLine)].map((_value, _key) => {
         return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
       });
     }
@@ -19502,7 +19503,10 @@
       let codeLine = randomDuds;
       if (tmpPasswords.length > 0 && passwordBaseChance <= Math.floor(Math.random() * 100)) {
         const tmpPassword = tmpPasswords[Math.floor(Math.random() * tmpPasswords.length)];
-        codeLine = tmpPassword + codeLine.slice(tmpPassword.length, codeLine.length);
+        const randomOffset = Math.floor(Math.random() * (charCountPerLine - 4));
+        const newStart = codeLine.slice(0, randomOffset + 1);
+        const newEnd = codeLine.slice(tmpPassword.length + randomOffset + 1, codeLine.length);
+        codeLine = newStart + tmpPassword + newEnd;
       }
       return codeLine;
     });

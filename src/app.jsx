@@ -5,7 +5,7 @@ import TabMenu from "./tabmenu.jsx";
 import PerkList from "./perklist.jsx";
 
 function CustomBar({ barType, size }) {
-  return <span className={ barType } style={{ width: size }}></span>;
+  return <span className={barType} style={{ width: size }}></span>;
 }
 
 function InfoBar() {
@@ -45,6 +45,7 @@ export default function App() {
   const lineBaseNumber = Math.floor(Math.random() * 9999);
   const maxLines = 16;
   const maxColumns = 2;
+  const charCountPerLine = 12
   const passwords = {
     4: [
       "SAFE",
@@ -64,29 +65,32 @@ export default function App() {
       "FIRE",
       "TIRE",
       "MIND"
-  ]
+    ]
   }
 
   function getRandomDudString() {
     const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
     // const startDuds = "<([{";
     // const endDuds = ">)]}";
-    return [...Array(12)].map((_value, _key) => {
+    return [...Array(charCountPerLine)].map((_value, _key) => {
       return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
     });
   }
 
-  // Copy passwords from "static" list
   const tmpPasswords = passwords[4].slice();
-  const passwordBaseChance = 50; // Note: Percent
-  // Note: Not really state, but hey...
+  const passwordBaseChance = 50;
+
   const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
     const randomDuds = getRandomDudString().join("")
-    let codeLine = randomDuds // TODO: Make it an object to implement game logic
-    if((tmpPasswords.length > 0) && (passwordBaseChance) <= Math.floor(Math.random() * 100)) {
-      const tmpPassword = tmpPasswords[Math.floor(Math.random() * tmpPasswords.length)] // TODO: remove pwd from list
-      // TODO: Insert at random position, fitting the word length
-      codeLine = tmpPassword + codeLine.slice(tmpPassword.length, codeLine.length)
+    let codeLine = randomDuds
+
+    if ((tmpPasswords.length > 0) && (passwordBaseChance) <= Math.floor(Math.random() * 100)) {
+      const tmpPassword = tmpPasswords[Math.floor(Math.random() * tmpPasswords.length)];
+
+      const randomOffset = Math.floor(Math.random() * (charCountPerLine - 4));
+      const newStart = codeLine.slice(0, randomOffset + 1);
+      const newEnd = codeLine.slice(tmpPassword.length + randomOffset + 1, codeLine.length);
+      codeLine = newStart + tmpPassword + newEnd;
     }
 
     return codeLine;
