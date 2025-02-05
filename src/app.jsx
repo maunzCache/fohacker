@@ -42,10 +42,28 @@ function InfoBar() {
 }
 
 export default function App() {
+  const lineBaseNumber = Math.floor(Math.random() * 9999);
+  const maxLines = 16;
+  const maxColumns = 2;
+
+  function getRandomDudString() {
+    const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
+    // const startDuds = "<([{";
+    // const endDuds = ">)]}";
+    return [...Array(12)].map((_value, _key) => {
+      return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
+    });
+  }
+
+  // Note: Not really state, but hey...
+  const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => { 
+    return getRandomDudString().join("");
+  });
+
   return (
     <>
       <InfoBar />
-      <Terminal />
+      <Terminal lineBaseNumber={lineBaseNumber} maxLines={maxLines} maxColumns={maxColumns} terminalState={terminalState} />
       <TabMenu />
       <PerkList />
     </>

@@ -17,13 +17,9 @@ function CodeLine({codeWord, onWordOver, onWordOut}) {
   return <span className="dud" data-word={codeWord} onMouseOver={onWordOver} onMouseOut={onWordOut}>{codeWord}</span>
 }
 
-export default function Terminal() {
+export default function Terminal({lineBaseNumber, maxLines, maxColumns, terminalState}) {
   const [attempts, setAttempts] = useState(3);
   const [hoverValue, setHoverValue] = useState("");
-
-  const lineBaseNumber = Math.floor(Math.random() * 9999);
-  const maxLines = 16;
-  const maxColumns = 2;
 
   const lineNumbers = [...Array(maxLines * maxColumns)].map((_, key) => {
     const lineNumber = (lineBaseNumber + (key * 12)).toString(16);
@@ -36,24 +32,14 @@ export default function Terminal() {
     );
   });
 
-  function getRandomString() {
-    const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
-    // const startDuds = "<([{";
-    // const endDuds = ">)]}";
-    return [...Array(12)].map((_value, _key) => {
-      return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
-    });
-  }
-
   function hoveringCodeWord(value) {
     setHoverValue(value);
   }
 
-  const codeLines = [...Array(maxLines * maxColumns)].map((_, key) => { 
-    const codeWord = getRandomString().join("");
+  const codeLines = terminalState.map((value, key) => { 
     return (
       <>
-        <CodeLine key={"codeno_" + key} codeWord={codeWord} onWordOver={() => hoveringCodeWord(codeWord)} onWordOut={() => hoveringCodeWord("")} />
+        <CodeLine key={"codeno_" + key} codeWord={value} onWordOver={() => hoveringCodeWord(value)} onWordOut={() => hoveringCodeWord("")} />
         <br></br>
       </>
     );

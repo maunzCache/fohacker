@@ -19300,29 +19300,19 @@
   function CodeLine({ codeWord, onWordOver, onWordOut }) {
     return /* @__PURE__ */ import_react.default.createElement("span", { className: "dud", "data-word": codeWord, onMouseOver: onWordOver, onMouseOut: onWordOut }, codeWord);
   }
-  function Terminal() {
+  function Terminal({ lineBaseNumber, maxLines, maxColumns, terminalState }) {
     const [attempts, setAttempts] = (0, import_react.useState)(3);
     const [hoverValue, setHoverValue] = (0, import_react.useState)("");
-    const lineBaseNumber = Math.floor(Math.random() * 9999);
-    const maxLines = 16;
-    const maxColumns = 2;
     const lineNumbers = [...Array(maxLines * maxColumns)].map((_, key) => {
       const lineNumber = (lineBaseNumber + key * 12).toString(16);
       const sizeDiff = 4 - lineNumber.length;
       return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("span", { key: "lineno_" + key }, "0x", Array(sizeDiff + 1).join("0"), lineNumber), /* @__PURE__ */ import_react.default.createElement("br", null));
     });
-    function getRandomString() {
-      const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/|_";
-      return [...Array(12)].map((_value, _key) => {
-        return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
-      });
-    }
     function hoveringCodeWord(value) {
       setHoverValue(value);
     }
-    const codeLines = [...Array(maxLines * maxColumns)].map((_, key) => {
-      const codeWord = getRandomString().join("");
-      return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement(CodeLine, { key: "codeno_" + key, codeWord, onWordOver: () => hoveringCodeWord(codeWord), onWordOut: () => hoveringCodeWord("") }), /* @__PURE__ */ import_react.default.createElement("br", null));
+    const codeLines = terminalState.map((value, key) => {
+      return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement(CodeLine, { key: "codeno_" + key, codeWord: value, onWordOver: () => hoveringCodeWord(value), onWordOut: () => hoveringCodeWord("") }), /* @__PURE__ */ import_react.default.createElement("br", null));
     });
     const terminalPages = /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("div", { className: "linenumber column" }, lineNumbers.slice(0, maxLines)), /* @__PURE__ */ import_react.default.createElement("div", { className: "code column left" }, codeLines.slice(0, maxLines)), /* @__PURE__ */ import_react.default.createElement("div", { className: "linenumber column" }, lineNumbers.slice(maxLines, maxLines * maxColumns)), /* @__PURE__ */ import_react.default.createElement("div", { className: "code column right" }, codeLines.slice(maxLines, maxLines * maxColumns)));
     return /* @__PURE__ */ import_react.default.createElement("div", { id: "terminal" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "header" }, /* @__PURE__ */ import_react.default.createElement("p", null, "Welcome to ROBCO Industries (TM) Termlink"), /* @__PURE__ */ import_react.default.createElement("p", null, "Password Required ", /* @__PURE__ */ import_react.default.createElement("span", { className: "password" })), /* @__PURE__ */ import_react.default.createElement("p", { id: "attempts" }, "Attempts Remaining: ", [...Array(attempts)].map(() => {
@@ -19470,7 +19460,19 @@
     return /* @__PURE__ */ import_react5.default.createElement("div", { id: "infobar" }, "Difficulty: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "difficulty" }, difficultyWord), " | Health: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "health" }, /* @__PURE__ */ import_react5.default.createElement(CustomBar, { barType: "healthbar", size: health / maxHealth * 100 })), " | Level: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "level" }, level), " | Experience: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "exp" }, /* @__PURE__ */ import_react5.default.createElement(CustomBar, { barType: "expbar", size: exp / maxExp * 100 })), " | Caps: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "caps" }, caps.toLocaleString("en-US")));
   }
   function App() {
-    return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(InfoBar, null), /* @__PURE__ */ import_react5.default.createElement(Terminal, null), /* @__PURE__ */ import_react5.default.createElement(TabMenu, null), /* @__PURE__ */ import_react5.default.createElement(PerkList, null));
+    const lineBaseNumber = Math.floor(Math.random() * 9999);
+    const maxLines = 16;
+    const maxColumns = 2;
+    function getRandomDudString() {
+      const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/|_";
+      return [...Array(12)].map((_value, _key) => {
+        return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
+      });
+    }
+    const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
+      return getRandomDudString().join("");
+    });
+    return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(InfoBar, null), /* @__PURE__ */ import_react5.default.createElement(Terminal, { lineBaseNumber, maxLines, maxColumns, terminalState }), /* @__PURE__ */ import_react5.default.createElement(TabMenu, null), /* @__PURE__ */ import_react5.default.createElement(PerkList, null));
   }
 
   // src/index.jsx
