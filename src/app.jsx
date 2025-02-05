@@ -41,8 +41,12 @@ function InfoBar() {
   </div>;
 }
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 export default function App() {
-  const lineBaseNumber = Math.floor(Math.random() * 9999);
+  const lineBaseNumber = getRandomInt(9999);
   const maxLines = 16;
   const maxColumns = 2;
   const charCountPerLine = 12
@@ -73,24 +77,31 @@ export default function App() {
     // const startDuds = "<([{";
     // const endDuds = ">)]}";
     return [...Array(charCountPerLine)].map((_value, _key) => {
-      return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
+      return dudCharacters[getRandomInt(dudCharacters.length)];
     });
   }
 
   const tmpPasswords = passwords[4].slice();
-  const passwordBaseChance = 50;
+  const passwordBaseChance = 25;
 
   const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
     const randomDuds = getRandomDudString().join("")
-    let codeLine = randomDuds
+    const codeLine = {
+      start: "",
+      end: "",
+      word: ""
+    }
 
-    if ((tmpPasswords.length > 0) && (passwordBaseChance) <= Math.floor(Math.random() * 100)) {
-      const tmpPassword = tmpPasswords[Math.floor(Math.random() * tmpPasswords.length)];
+    if ((tmpPasswords.length > 0) && (passwordBaseChance >= getRandomInt(100))) {
+      const tmpPasswordIdx = getRandomInt(tmpPasswords.length);
+      codeLine.word = tmpPasswords[tmpPasswordIdx];
+      tmpPasswords.splice(tmpPasswordIdx, 1);
 
-      const randomOffset = Math.floor(Math.random() * (charCountPerLine - 4));
-      const newStart = codeLine.slice(0, randomOffset + 1);
-      const newEnd = codeLine.slice(tmpPassword.length + randomOffset + 1, codeLine.length);
-      codeLine = newStart + tmpPassword + newEnd;
+      const randomOffset = getRandomInt(charCountPerLine - codeLine.word.length);
+      codeLine.start = randomDuds.slice(0, randomOffset + 1);
+      codeLine.end = randomDuds.slice(codeLine.word.length + randomOffset + 1, randomDuds.length);
+    } else {
+      codeLine.start = randomDuds;
     }
 
     return codeLine;

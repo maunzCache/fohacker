@@ -19298,7 +19298,7 @@
     return /* @__PURE__ */ import_react.default.createElement("div", { className: "info column" }, "Fallout Hacker", /* @__PURE__ */ import_react.default.createElement("br", null), "Version ", gameVersion, /* @__PURE__ */ import_react.default.createElement("br", null), /* @__PURE__ */ import_react.default.createElement("span", { className: "input", "data-content": previewSolution ? previewSolution : "\xA0" }, previewSolution ? "\xA0" : "\xA0"));
   }
   function CodeLine({ codeWord, onWordOver, onWordOut }) {
-    return /* @__PURE__ */ import_react.default.createElement("span", { className: "dud", "data-word": codeWord, onMouseOver: onWordOver, onMouseOut: onWordOut }, codeWord);
+    return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, codeWord.start, /* @__PURE__ */ import_react.default.createElement("span", { className: "word", "data-word": codeWord.word, onMouseOver: onWordOver, onMouseOut: onWordOut }, codeWord.word), codeWord.end);
   }
   function Terminal({ lineBaseNumber, maxLines, maxColumns, terminalState }) {
     const [attempts, setAttempts] = (0, import_react.useState)(3);
@@ -19312,7 +19312,7 @@
       setHoverValue(value);
     }
     const codeLines = terminalState.map((value, key) => {
-      return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement(CodeLine, { key: "codeno_" + key, codeWord: value, onWordOver: () => hoveringCodeWord(value), onWordOut: () => hoveringCodeWord("") }), /* @__PURE__ */ import_react.default.createElement("br", null));
+      return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement(CodeLine, { key: "codeno_" + key, codeWord: value, onWordOver: () => hoveringCodeWord(value.word), onWordOut: () => hoveringCodeWord("") }), /* @__PURE__ */ import_react.default.createElement("br", null));
     });
     const terminalPages = /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("div", { className: "linenumber column" }, lineNumbers.slice(0, maxLines)), /* @__PURE__ */ import_react.default.createElement("div", { className: "code column left" }, codeLines.slice(0, maxLines)), /* @__PURE__ */ import_react.default.createElement("div", { className: "linenumber column" }, lineNumbers.slice(maxLines, maxLines * maxColumns)), /* @__PURE__ */ import_react.default.createElement("div", { className: "code column right" }, codeLines.slice(maxLines, maxLines * maxColumns)));
     return /* @__PURE__ */ import_react.default.createElement("div", { id: "terminal" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "header" }, /* @__PURE__ */ import_react.default.createElement("p", null, "Welcome to ROBCO Industries (TM) Termlink"), /* @__PURE__ */ import_react.default.createElement("p", null, "Password Required ", /* @__PURE__ */ import_react.default.createElement("span", { className: "password" })), /* @__PURE__ */ import_react.default.createElement("p", { id: "attempts" }, "Attempts Remaining: ", [...Array(attempts)].map(() => {
@@ -19464,8 +19464,11 @@
     }
     return /* @__PURE__ */ import_react5.default.createElement("div", { id: "infobar" }, "Difficulty: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "difficulty" }, difficultyWord), " | Health: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "health" }, /* @__PURE__ */ import_react5.default.createElement(CustomBar, { barType: "healthbar", size: health / maxHealth * 100 })), " | Level: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "level" }, level), " | Experience: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "exp" }, /* @__PURE__ */ import_react5.default.createElement(CustomBar, { barType: "expbar", size: exp / maxExp * 100 })), " | Caps: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "caps" }, caps.toLocaleString("en-US")));
   }
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
   function App() {
-    const lineBaseNumber = Math.floor(Math.random() * 9999);
+    const lineBaseNumber = getRandomInt(9999);
     const maxLines = 16;
     const maxColumns = 2;
     const charCountPerLine = 12;
@@ -19493,20 +19496,27 @@
     function getRandomDudString() {
       const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/|_";
       return [...Array(charCountPerLine)].map((_value, _key) => {
-        return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
+        return dudCharacters[getRandomInt(dudCharacters.length)];
       });
     }
     const tmpPasswords = passwords[4].slice();
-    const passwordBaseChance = 50;
+    const passwordBaseChance = 25;
     const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
       const randomDuds = getRandomDudString().join("");
-      let codeLine = randomDuds;
-      if (tmpPasswords.length > 0 && passwordBaseChance <= Math.floor(Math.random() * 100)) {
-        const tmpPassword = tmpPasswords[Math.floor(Math.random() * tmpPasswords.length)];
-        const randomOffset = Math.floor(Math.random() * (charCountPerLine - 4));
-        const newStart = codeLine.slice(0, randomOffset + 1);
-        const newEnd = codeLine.slice(tmpPassword.length + randomOffset + 1, codeLine.length);
-        codeLine = newStart + tmpPassword + newEnd;
+      const codeLine = {
+        start: "",
+        end: "",
+        word: ""
+      };
+      if (tmpPasswords.length > 0 && passwordBaseChance >= getRandomInt(100)) {
+        const tmpPasswordIdx = getRandomInt(tmpPasswords.length);
+        codeLine.word = tmpPasswords[tmpPasswordIdx];
+        tmpPasswords.splice(tmpPasswordIdx, 1);
+        const randomOffset = getRandomInt(charCountPerLine - codeLine.word.length);
+        codeLine.start = randomDuds.slice(0, randomOffset + 1);
+        codeLine.end = randomDuds.slice(codeLine.word.length + randomOffset + 1, randomDuds.length);
+      } else {
+        codeLine.start = randomDuds;
       }
       return codeLine;
     });

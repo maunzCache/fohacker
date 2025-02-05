@@ -11,7 +11,7 @@
     "include": ["esbuild.ts", "deno.json", "assets/", "src/", "tests/"]
   },
   "tasks": {
-    "build": "deno task init && deno run -A esbuild.ts build",
+    "build": "deno run -A esbuild.ts build",
     "init": "deno cache src/index.jsx --reload --lock"
   },
   "exclude": ["dist/"],

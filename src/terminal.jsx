@@ -14,7 +14,11 @@ function CodeInput({ previewSolution }) {
 }
 
 function CodeLine({codeWord, onWordOver, onWordOut}) {
-  return <span className="dud" data-word={codeWord} onMouseOver={onWordOver} onMouseOut={onWordOut}>{codeWord}</span>
+  return <>
+    {codeWord.start}
+    <span className="word" data-word={codeWord.word} onMouseOver={onWordOver} onMouseOut={onWordOut}>{codeWord.word}</span>
+    {codeWord.end}
+  </>
 }
 
 export default function Terminal({lineBaseNumber, maxLines, maxColumns, terminalState}) {
@@ -39,7 +43,7 @@ export default function Terminal({lineBaseNumber, maxLines, maxColumns, terminal
   const codeLines = terminalState.map((value, key) => { 
     return (
       <>
-        <CodeLine key={"codeno_" + key} codeWord={value} onWordOver={() => hoveringCodeWord(value)} onWordOut={() => hoveringCodeWord("")} />
+        <CodeLine key={"codeno_" + key} codeWord={value} onWordOver={() => hoveringCodeWord(value.word)} onWordOut={() => hoveringCodeWord("")} />
         <br></br>
       </>
     );
