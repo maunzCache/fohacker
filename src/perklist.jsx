@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import Perk from "./classes/perk.js";
+import Perk from "./classes/perk.ts";
 
 export default function PerkList() {
   const [perks, setPerks] = useState([
