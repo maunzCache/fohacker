@@ -45,6 +45,27 @@ export default function App() {
   const lineBaseNumber = Math.floor(Math.random() * 9999);
   const maxLines = 16;
   const maxColumns = 2;
+  const passwords = {
+    4: [
+      "SAFE",
+      "HACK",
+      "CORE",
+      "TIME",
+      "NONE",
+      "SORT",
+      "ROLL",
+      "HUNT",
+      "BURN",
+      "WIRE",
+      "TOOL",
+      "BACK",
+      "BLUE",
+      "HARD",
+      "FIRE",
+      "TIRE",
+      "MIND"
+  ]
+  }
 
   function getRandomDudString() {
     const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/\|_";
@@ -55,9 +76,20 @@ export default function App() {
     });
   }
 
+  // Copy passwords from "static" list
+  const tmpPasswords = passwords[4].slice();
+  const passwordBaseChance = 50; // Note: Percent
   // Note: Not really state, but hey...
-  const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => { 
-    return getRandomDudString().join("");
+  const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
+    const randomDuds = getRandomDudString().join("")
+    let codeLine = randomDuds // TODO: Make it an object to implement game logic
+    if((tmpPasswords.length > 0) && (passwordBaseChance) <= Math.floor(Math.random() * 100)) {
+      const tmpPassword = tmpPasswords[Math.floor(Math.random() * tmpPasswords.length)] // TODO: remove pwd from list
+      // TODO: Insert at random position, fitting the word length
+      codeLine = tmpPassword + codeLine.slice(tmpPassword.length, codeLine.length)
+    }
+
+    return codeLine;
   });
 
   return (

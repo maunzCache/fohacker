@@ -19349,8 +19349,13 @@
   // src/perklist.jsx
   var import_react4 = __toESM(require_react());
 
-  // src/classes/perk.js
+  // src/classes/perk.ts
   var Perk = class {
+    title;
+    description;
+    level;
+    maxlevel;
+    meetsRequirements;
     constructor(title, description, level) {
       this.title = title;
       this.description = description;
@@ -19463,14 +19468,43 @@
     const lineBaseNumber = Math.floor(Math.random() * 9999);
     const maxLines = 16;
     const maxColumns = 2;
+    const passwords = {
+      4: [
+        "SAFE",
+        "HACK",
+        "CORE",
+        "TIME",
+        "NONE",
+        "SORT",
+        "ROLL",
+        "HUNT",
+        "BURN",
+        "WIRE",
+        "TOOL",
+        "BACK",
+        "BLUE",
+        "HARD",
+        "FIRE",
+        "TIRE",
+        "MIND"
+      ]
+    };
     function getRandomDudString() {
       const dudCharacters = ",;.:^<>()[]{}!?@%$`'\"*+-=/|_";
       return [...Array(12)].map((_value, _key) => {
         return dudCharacters[Math.floor(Math.random() * dudCharacters.length)];
       });
     }
+    const tmpPasswords = passwords[4].slice();
+    const passwordBaseChance = 50;
     const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
-      return getRandomDudString().join("");
+      const randomDuds = getRandomDudString().join("");
+      let codeLine = randomDuds;
+      if (tmpPasswords.length > 0 && passwordBaseChance <= Math.floor(Math.random() * 100)) {
+        const tmpPassword = tmpPasswords[Math.floor(Math.random() * tmpPasswords.length)];
+        codeLine = tmpPassword + codeLine.slice(tmpPassword.length, codeLine.length);
+      }
+      return codeLine;
     });
     return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(InfoBar, null), /* @__PURE__ */ import_react5.default.createElement(Terminal, { lineBaseNumber, maxLines, maxColumns, terminalState }), /* @__PURE__ */ import_react5.default.createElement(TabMenu, null), /* @__PURE__ */ import_react5.default.createElement(PerkList, null));
   }
