@@ -14,6 +14,7 @@ function CodeInput({ previewSolution }) {
 }
 
 function CodeLine({codeWord, onWordOver, onWordOut}) {
+  // TODO: Handle dud code; handle multiline passwords
   return <>
     {codeWord.start}
     <span className="word" data-word={codeWord.word} onMouseOver={onWordOver} onMouseOut={onWordOut}>{codeWord.word}</span>
@@ -22,7 +23,7 @@ function CodeLine({codeWord, onWordOver, onWordOut}) {
 }
 
 export default function Terminal({lineBaseNumber, maxLines, maxColumns, terminalState}) {
-  const [attempts, setAttempts] = useState(3);
+  const [attempts, setAttempts] = useState(4);
   const [hoverValue, setHoverValue] = useState("");
 
   const lineNumbers = [...Array(maxLines * maxColumns)].map((_, key) => {

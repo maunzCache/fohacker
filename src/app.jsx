@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { getRandomInt, shuffleArray } from "./classes/utils.ts";
+
 import Terminal from "./terminal.jsx";
 import TabMenu from "./tabmenu.jsx";
 import PerkList from "./perklist.jsx";
@@ -17,6 +19,8 @@ function InfoBar() {
   const [exp, setExp] = useState(1);
   const [caps, setCaps] = useState(1000000);
 
+  // Note: Those are Fallout 4 difficulties
+  // FO3 and New Vegas have one more, and different naming
   let difficultyWord = "";
   if (difficulty >= 4 && difficulty <= 5) {
     difficultyWord = "Easy";
@@ -41,34 +45,60 @@ function InfoBar() {
   </div>;
 }
 
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
-
 export default function App() {
   const lineBaseNumber = getRandomInt(9999);
   const maxLines = 16;
   const maxColumns = 2;
   const charCountPerLine = 12
+
+  // SPECIAL is not yet relevant here
+  // For later: https://www.thegamer.com/fallout-4-guide-terminal-passwords-hacking/
+  // or https://fallout.fandom.com/wiki/Hacking_(Fallout_4)
+  const passwordCount = 20;
+  // TODO: Find a way to dump passwords from the game
+  // Those are from random screenshots of all games
   const passwords = {
     4: [
-      "SAFE",
-      "HACK",
-      "CORE",
-      "TIME",
-      "NONE",
-      "SORT",
-      "ROLL",
-      "HUNT",
-      "BURN",
-      "WIRE",
-      "TOOL",
+      "AGES",
       "BACK",
       "BLUE",
-      "HARD",
+      "BURN",
+      "CASE",
+      "CORE",
+      "DRAG",
+      "EGOS",
       "FIRE",
+      "FLAT",
+      "GETS",
+      "HACK",
+      "HARD",
+      "HUNT",
+      "JUMP",
+      "LOSE",
+      "LOST",
+      "MIND",
+      "NONE",
+      "POTS",
+      "RAIN",
+      "RISE",
+      "ROAM",
+      "ROLL",
+      "SAFE",
+      "SEED",
+      "SHOW",
+      "SIGN",
+      "SOIL",
+      "SORT",
+      "STAY",
+      "TIME",
       "TIRE",
-      "MIND"
+      "TOOL",
+      "TURN",
+      "WEAK",
+      "WHEN",
+      "WIRE",
+      "WOOD",
+      "WORN",
     ]
   }
 
@@ -82,7 +112,9 @@ export default function App() {
   }
 
   const tmpPasswords = passwords[4].slice();
-  const passwordBaseChance = 25;
+  shuffleArray(tmpPasswords);
+  tmpPasswords.slice(0, passwordCount);
+  const passwordBaseChance = Math.floor(passwordCount / (maxLines * maxColumns) * 100); // TODO: Not useful if less words
 
   const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
     const randomDuds = getRandomDudString().join("")
@@ -92,6 +124,7 @@ export default function App() {
       word: ""
     }
 
+    // TODO: Iterate over tmpPasswords instead. Make sure not to overwrite any
     if ((tmpPasswords.length > 0) && (passwordBaseChance >= getRandomInt(100))) {
       const tmpPasswordIdx = getRandomInt(tmpPasswords.length);
       codeLine.word = tmpPasswords[tmpPasswordIdx];

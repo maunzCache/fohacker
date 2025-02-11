@@ -19291,6 +19291,17 @@
   // src/app.jsx
   var import_react5 = __toESM(require_react());
 
+  // src/classes/utils.ts
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i >= 1; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
   // src/terminal.jsx
   var import_react = __toESM(require_react());
   function CodeInput({ previewSolution }) {
@@ -19301,7 +19312,7 @@
     return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, codeWord.start, /* @__PURE__ */ import_react.default.createElement("span", { className: "word", "data-word": codeWord.word, onMouseOver: onWordOver, onMouseOut: onWordOut }, codeWord.word), codeWord.end);
   }
   function Terminal({ lineBaseNumber, maxLines, maxColumns, terminalState }) {
-    const [attempts, setAttempts] = (0, import_react.useState)(3);
+    const [attempts, setAttempts] = (0, import_react.useState)(4);
     const [hoverValue, setHoverValue] = (0, import_react.useState)("");
     const lineNumbers = [...Array(maxLines * maxColumns)].map((_, key) => {
       const lineNumber = (lineBaseNumber + key * 12).toString(16);
@@ -19375,7 +19386,7 @@
           "You can see the current password but you still have to click it by yourself.",
           "Less searching, more clicking. The password gets highlighted too."
         ],
-        2
+        0
       ),
       new perk_default(
         "More Of The Same",
@@ -19464,33 +19475,54 @@
     }
     return /* @__PURE__ */ import_react5.default.createElement("div", { id: "infobar" }, "Difficulty: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "difficulty" }, difficultyWord), " | Health: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "health" }, /* @__PURE__ */ import_react5.default.createElement(CustomBar, { barType: "healthbar", size: health / maxHealth * 100 })), " | Level: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "level" }, level), " | Experience: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "exp" }, /* @__PURE__ */ import_react5.default.createElement(CustomBar, { barType: "expbar", size: exp / maxExp * 100 })), " | Caps: ", /* @__PURE__ */ import_react5.default.createElement("div", { className: "caps" }, caps.toLocaleString("en-US")));
   }
-  function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-  }
   function App() {
     const lineBaseNumber = getRandomInt(9999);
     const maxLines = 16;
     const maxColumns = 2;
     const charCountPerLine = 12;
+    const passwordCount = 20;
     const passwords = {
       4: [
-        "SAFE",
-        "HACK",
-        "CORE",
-        "TIME",
-        "NONE",
-        "SORT",
-        "ROLL",
-        "HUNT",
-        "BURN",
-        "WIRE",
-        "TOOL",
+        "AGES",
         "BACK",
         "BLUE",
-        "HARD",
+        "BURN",
+        "CASE",
+        "CORE",
+        "DRAG",
+        "EGOS",
         "FIRE",
+        "FLAT",
+        "GETS",
+        "HACK",
+        "HARD",
+        "HUNT",
+        "JUMP",
+        "LOSE",
+        "LOST",
+        "MIND",
+        "NONE",
+        "POTS",
+        "RAIN",
+        "RISE",
+        "ROAM",
+        "ROLL",
+        "SAFE",
+        "SEED",
+        "SHOW",
+        "SIGN",
+        "SOIL",
+        "SORT",
+        "STAY",
+        "TIME",
         "TIRE",
-        "MIND"
+        "TOOL",
+        "TURN",
+        "WEAK",
+        "WHEN",
+        "WIRE",
+        "WOOD",
+        "WORN"
       ]
     };
     function getRandomDudString() {
@@ -19500,7 +19532,9 @@
       });
     }
     const tmpPasswords = passwords[4].slice();
-    const passwordBaseChance = 25;
+    shuffleArray(tmpPasswords);
+    tmpPasswords.slice(0, passwordCount);
+    const passwordBaseChance = Math.floor(passwordCount / (maxLines * maxColumns) * 100);
     const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
       const randomDuds = getRandomDudString().join("");
       const codeLine = {

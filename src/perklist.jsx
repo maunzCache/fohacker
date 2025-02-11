@@ -10,7 +10,7 @@ export default function PerkList() {
         "You can see the current password but you still have to click it by yourself.",
         "Less searching, more clicking. The password gets highlighted too.",
       ],
-      2,
+      0,
     ),
     new Perk(
       "More Of The Same",
