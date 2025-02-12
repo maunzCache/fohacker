@@ -114,6 +114,8 @@ export default function App() {
   const tmpPasswords = passwords[4].slice();
   shuffleArray(tmpPasswords);
   tmpPasswords.slice(0, passwordCount);
+  const currentSolution = tmpPasswords[getRandomInt(tmpPasswords.length)];
+
   const passwordBaseChance = Math.floor(passwordCount / (maxLines * maxColumns) * 100); // TODO: Not useful if less words
 
   const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
@@ -143,7 +145,7 @@ export default function App() {
   return (
     <>
       <InfoBar />
-      <Terminal lineBaseNumber={lineBaseNumber} maxLines={maxLines} maxColumns={maxColumns} terminalState={terminalState} />
+      <Terminal lineBaseNumber={lineBaseNumber} maxLines={maxLines} maxColumns={maxColumns} terminalState={terminalState} currentSolution={currentSolution}/>
       <TabMenu />
       <PerkList />
     </>

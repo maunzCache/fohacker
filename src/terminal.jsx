@@ -13,7 +13,7 @@ function CodeInput({ previewSolution }) {
   );
 }
 
-function CodeLine({codeWord, onWordOver, onWordOut}) {
+function CodeLine({ codeWord, onWordOver, onWordOut }) {
   // TODO: Handle dud code; handle multiline passwords
   return <>
     {codeWord.start}
@@ -22,7 +22,7 @@ function CodeLine({codeWord, onWordOver, onWordOut}) {
   </>
 }
 
-export default function Terminal({lineBaseNumber, maxLines, maxColumns, terminalState}) {
+export default function Terminal({ lineBaseNumber, maxLines, maxColumns, terminalState, currentSolution }) {
   const [attempts, setAttempts] = useState(4);
   const [hoverValue, setHoverValue] = useState("");
 
@@ -41,28 +41,28 @@ export default function Terminal({lineBaseNumber, maxLines, maxColumns, terminal
     setHoverValue(value);
   }
 
-  const codeLines = terminalState.map((value, key) => { 
+  const codeLines = terminalState.map((value, key) => {
     return (
       <>
         <CodeLine key={"codeno_" + key} codeWord={value} onWordOver={() => hoveringCodeWord(value.word)} onWordOut={() => hoveringCodeWord("")} />
         <br></br>
       </>
     );
-   });
+  });
 
-   const terminalPages = (
+  const terminalPages = (
     <>
       <div className="linenumber column">
-      {lineNumbers.slice(0, maxLines)}
+        {lineNumbers.slice(0, maxLines)}
       </div>
       <div className={"code column left"}>
-      {codeLines.slice(0, maxLines)}
+        {codeLines.slice(0, maxLines)}
       </div>
       <div className="linenumber column">
-      {lineNumbers.slice(maxLines, maxLines * maxColumns)}
+        {lineNumbers.slice(maxLines, maxLines * maxColumns)}
       </div>
       <div className={"code column right"}>
-      {codeLines.slice(maxLines, maxLines * maxColumns)}
+        {codeLines.slice(maxLines, maxLines * maxColumns)}
       </div>
     </>
   );
@@ -74,8 +74,10 @@ export default function Terminal({lineBaseNumber, maxLines, maxColumns, terminal
       <div className="header">
         <p>Welcome to ROBCO Industries (TM) Termlink</p>
         <p>
-          Password Required <span className="password"></span>
+          Password Required <span className="password">(PASSWORD={currentSolution})</span>
         </p>
+      </div>
+      <div>
         <p id="attempts">
           Attempts Remaining: {[...Array(attempts)].map(() => {
             return (

@@ -19311,7 +19311,7 @@
   function CodeLine({ codeWord, onWordOver, onWordOut }) {
     return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, codeWord.start, /* @__PURE__ */ import_react.default.createElement("span", { className: "word", "data-word": codeWord.word, onMouseOver: onWordOver, onMouseOut: onWordOut }, codeWord.word), codeWord.end);
   }
-  function Terminal({ lineBaseNumber, maxLines, maxColumns, terminalState }) {
+  function Terminal({ lineBaseNumber, maxLines, maxColumns, terminalState, currentSolution }) {
     const [attempts, setAttempts] = (0, import_react.useState)(4);
     const [hoverValue, setHoverValue] = (0, import_react.useState)("");
     const lineNumbers = [...Array(maxLines * maxColumns)].map((_, key) => {
@@ -19326,7 +19326,7 @@
       return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement(CodeLine, { key: "codeno_" + key, codeWord: value, onWordOver: () => hoveringCodeWord(value.word), onWordOut: () => hoveringCodeWord("") }), /* @__PURE__ */ import_react.default.createElement("br", null));
     });
     const terminalPages = /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("div", { className: "linenumber column" }, lineNumbers.slice(0, maxLines)), /* @__PURE__ */ import_react.default.createElement("div", { className: "code column left" }, codeLines.slice(0, maxLines)), /* @__PURE__ */ import_react.default.createElement("div", { className: "linenumber column" }, lineNumbers.slice(maxLines, maxLines * maxColumns)), /* @__PURE__ */ import_react.default.createElement("div", { className: "code column right" }, codeLines.slice(maxLines, maxLines * maxColumns)));
-    return /* @__PURE__ */ import_react.default.createElement("div", { id: "terminal" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "header" }, /* @__PURE__ */ import_react.default.createElement("p", null, "Welcome to ROBCO Industries (TM) Termlink"), /* @__PURE__ */ import_react.default.createElement("p", null, "Password Required ", /* @__PURE__ */ import_react.default.createElement("span", { className: "password" })), /* @__PURE__ */ import_react.default.createElement("p", { id: "attempts" }, "Attempts Remaining: ", [...Array(attempts)].map(() => {
+    return /* @__PURE__ */ import_react.default.createElement("div", { id: "terminal" }, /* @__PURE__ */ import_react.default.createElement("div", { className: "header" }, /* @__PURE__ */ import_react.default.createElement("p", null, "Welcome to ROBCO Industries (TM) Termlink"), /* @__PURE__ */ import_react.default.createElement("p", null, "Password Required ", /* @__PURE__ */ import_react.default.createElement("span", { className: "password" }, "(PASSWORD=", currentSolution, ")"))), /* @__PURE__ */ import_react.default.createElement("div", null, /* @__PURE__ */ import_react.default.createElement("p", { id: "attempts" }, "Attempts Remaining: ", [...Array(attempts)].map(() => {
       return /* @__PURE__ */ import_react.default.createElement(import_react.default.Fragment, null, /* @__PURE__ */ import_react.default.createElement("span", { key: attempts, className: "attempt" }, "\xA0\xA0"));
     }))), terminalPages, /* @__PURE__ */ import_react.default.createElement(CodeInput, { previewSolution: hoverValue }));
   }
@@ -19534,6 +19534,7 @@
     const tmpPasswords = passwords[4].slice();
     shuffleArray(tmpPasswords);
     tmpPasswords.slice(0, passwordCount);
+    const currentSolution = tmpPasswords[getRandomInt(tmpPasswords.length)];
     const passwordBaseChance = Math.floor(passwordCount / (maxLines * maxColumns) * 100);
     const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
       const randomDuds = getRandomDudString().join("");
@@ -19554,7 +19555,7 @@
       }
       return codeLine;
     });
-    return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(InfoBar, null), /* @__PURE__ */ import_react5.default.createElement(Terminal, { lineBaseNumber, maxLines, maxColumns, terminalState }), /* @__PURE__ */ import_react5.default.createElement(TabMenu, null), /* @__PURE__ */ import_react5.default.createElement(PerkList, null));
+    return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(InfoBar, null), /* @__PURE__ */ import_react5.default.createElement(Terminal, { lineBaseNumber, maxLines, maxColumns, terminalState, currentSolution }), /* @__PURE__ */ import_react5.default.createElement(TabMenu, null), /* @__PURE__ */ import_react5.default.createElement(PerkList, null));
   }
 
   // src/index.jsx
