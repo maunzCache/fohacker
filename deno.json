@@ -12,7 +12,7 @@
   },
   "tasks": {
     "build": "deno run -A esbuild.ts build",
-    "init": "deno cache src/index.jsx --reload --lock"
+    "init": "deno cache src/index.jsx --reload --lock --frozen"
   },
   "exclude": ["dist/"],
   "nodeModulesDir": "auto"

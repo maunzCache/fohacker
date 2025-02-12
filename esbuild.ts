@@ -1,4 +1,4 @@
-import esbuild from "npm:esbuild@0.24.2";
+import esbuild from "npm:esbuild@0.25.0";
 
 const buildCtx = await esbuild.context({
   entryPoints: ["./src/index.jsx"],
