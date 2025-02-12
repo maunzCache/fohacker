@@ -65,7 +65,7 @@ export default function PerkList() {
     <div id="perklist">
       {perks.map((perk, key) => (
         <div
-          key={key}
+          key={"perk_" + key}
           className={classes.join(" ")}
           data-id={key}
           title={perk.description[0]}
