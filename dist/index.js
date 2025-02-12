@@ -19477,8 +19477,9 @@
   }
   function App() {
     const lineBaseNumber = getRandomInt(9999);
-    const maxLines = 16;
+    const linesPerColumn = 16;
     const maxColumns = 2;
+    const maxLines = linesPerColumn * maxColumns;
     const charCountPerLine = 12;
     const passwordCount = 20;
     const passwords = {
@@ -19531,22 +19532,21 @@
         return dudCharacters[getRandomInt(dudCharacters.length)];
       });
     }
-    const tmpPasswords = passwords[4].slice();
+    let tmpPasswords = passwords[4].slice();
     shuffleArray(tmpPasswords);
-    tmpPasswords.slice(0, passwordCount);
+    tmpPasswords = tmpPasswords.slice(0, passwordCount);
     const currentSolution = tmpPasswords[getRandomInt(tmpPasswords.length)];
-    const passwordBaseChance = Math.floor(passwordCount / (maxLines * maxColumns) * 100);
-    const terminalState = [...Array(maxLines * maxColumns)].map((_value, _key) => {
+    tmpPasswords = tmpPasswords.concat(new Array(maxLines - passwordCount).fill(""));
+    shuffleArray(tmpPasswords);
+    const terminalState = [...Array(maxLines)].map((_value, passwordIndex) => {
       const randomDuds = getRandomDudString().join("");
       const codeLine = {
         start: "",
         end: "",
         word: ""
       };
-      if (tmpPasswords.length > 0 && passwordBaseChance >= getRandomInt(100)) {
-        const tmpPasswordIdx = getRandomInt(tmpPasswords.length);
-        codeLine.word = tmpPasswords[tmpPasswordIdx];
-        tmpPasswords.splice(tmpPasswordIdx, 1);
+      if (tmpPasswords[passwordIndex].length > 0) {
+        codeLine.word = tmpPasswords[passwordIndex];
         const randomOffset = getRandomInt(charCountPerLine - codeLine.word.length);
         codeLine.start = randomDuds.slice(0, randomOffset + 1);
         codeLine.end = randomDuds.slice(codeLine.word.length + randomOffset + 1, randomDuds.length);
@@ -19555,7 +19555,7 @@
       }
       return codeLine;
     });
-    return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(InfoBar, null), /* @__PURE__ */ import_react5.default.createElement(Terminal, { lineBaseNumber, maxLines, maxColumns, terminalState, currentSolution }), /* @__PURE__ */ import_react5.default.createElement(TabMenu, null), /* @__PURE__ */ import_react5.default.createElement(PerkList, null));
+    return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(InfoBar, null), /* @__PURE__ */ import_react5.default.createElement(Terminal, { lineBaseNumber, maxLines: linesPerColumn, maxColumns, terminalState, currentSolution }), /* @__PURE__ */ import_react5.default.createElement(TabMenu, null), /* @__PURE__ */ import_react5.default.createElement(PerkList, null));
   }
 
   // src/index.jsx
